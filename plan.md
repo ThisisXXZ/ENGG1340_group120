@@ -23,7 +23,7 @@ User interface:
 
   A bird carries your piece away... (某个棋子消失)
 
-  Your opponent flipped one of your pieces while when you were not looking (棋子颜色翻转)
+  Your opponent flipped one of your pieces while you were not looking (棋子颜色翻转)
 
   …… (其他随机事件征集！有趣但不会对游戏的公平产生太大影响，可通过程序检测)
 
