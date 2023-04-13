@@ -1,0 +1,8 @@
+player.o: player.cpp player.h
+	g++ -c player.cpp
+
+main.o: main.cpp player.h
+	g++ -c player.cpp main.cpp
+
+main: player.o main.o
+	g++ player.o main.o -o main
