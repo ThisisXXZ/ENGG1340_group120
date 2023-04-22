@@ -3,20 +3,14 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
-#include <windows.h>
 #include <cstdio>
 #include "player.h"
 
 using namespace std;
 
+
 void player::colorPrint(string s, int col) {
-    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | col);
-    for (int i = 0; i < s.size(); i++) {
-        Sleep(35);
-        std::cout << s[i];
-    }
-    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
+    cout << s << endl;
 }
 
 void player::initName() {
@@ -96,36 +90,37 @@ void player::initSkill() {
 }
 
 void player::printTranscript() {
-    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 5);
+
+//    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+//    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 5);
     cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+     [the University of Hong Kong: Application form]     +\n";
-    Sleep(200);
+//   Sleep(200);
     cout << "+                                                         +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+                                                         +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Name: " << left << setw(50) << name << "+\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+                                                         +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Sex: " << left << setw(51) << (string)(sex ? "female" : "male") << "+\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+                                                         +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Academic talents: " << left << setw(38) << iq << "+\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Charisma: " << left << setw(46) << eq << "+\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Courage: " << left << setw(47) << courage << "+\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+                                                         +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+ Skills (needs developing...)                            +\n";
-    Sleep(200);
+//    Sleep(200);
     cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
+//    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
 }
 
 void player::init() {

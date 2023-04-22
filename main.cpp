@@ -1,90 +1,50 @@
 #include <iostream>
 #include <string>
+#include <unistd.h>
 #include "player.h"
+#include "interface.h"
 
 using namespace std;
 
 
-void delay() 
-{
-    //延时cout
-    clock_t start_time;//, cur_time;
-    start_time = clock();//clock()
-    for (; (clock() - start_time) < 2 * CLOCKS_PER_SEC;);//延迟2秒
-}  
-
-
-void printTitle() {
-    cout << "\
-                                  '##::::'##:'##:::'##:'##::::'##:\n\
-                                   ##:::: ##: ##::'##:: ##:::: ##:\n\
-                                   ##:::: ##: ##:'##::: ##:::: ##:\n\
-                                   #########: #####:::: ##:::: ##:\n\
-                                   ##.... ##: ##. ##::: ##:::: ##:\n\
-                                   ##:::: ##: ##:. ##:: ##:::: ##:\n\
-                                   ##:::: ##: ##::. ##:. #######::\n\
-                                  ..:::::..::..::::..:::.......:::\n\
-              :'######::'########:'##::::'##:'########::'########:'##::: ##:'########:\n\
-              '##... ##:... ##..:: ##:::: ##: ##.... ##: ##.....:: ###:: ##:... ##..::\n\
-               ##:::..::::: ##:::: ##:::: ##: ##:::: ##: ##::::::: ####: ##:::: ##::::\n\
-              . ######::::: ##:::: ##:::: ##: ##:::: ##: ######::: ## ## ##:::: ##::::\n\
-              :..... ##:::: ##:::: ##:::: ##: ##:::: ##: ##...:::: ##. ####:::: ##::::\n\
-              '##::: ##:::: ##:::: ##:::: ##: ##:::: ##: ##::::::: ##:. ###:::: ##::::\n\
-              . ######::::: ##::::. #######:: ########:: ########: ##::. ##:::: ##::::\n\
-              :......::::::..::::::.......:::........:::........::..::::..:::::..:::::\n\
-    :'######::'####:'##::::'##:'##::::'##:'##::::::::::'###::::'########::'#######::'########::\n\
-    '##... ##:. ##:: ###::'###: ##:::: ##: ##:::::::::'## ##:::... ##..::'##.... ##: ##.... ##:\n\
-     ##:::..::: ##:: ####'####: ##:::: ##: ##::::::::'##:. ##::::: ##:::: ##:::: ##: ##:::: ##:\n\
-    . ######::: ##:: ## ### ##: ##:::: ##: ##:::::::'##:::. ##:::: ##:::: ##:::: ##: ########::\n\
-    :..... ##:: ##:: ##. #: ##: ##:::: ##: ##::::::: #########:::: ##:::: ##:::: ##: ##.. ##:::\n\
-    '##::: ##:: ##:: ##:.:: ##: ##:::: ##: ##::::::: ##.... ##:::: ##:::: ##:::: ##: ##::. ##::\n\
-    . ######::'####: ##:::: ##:. #######:: ########: ##:::: ##:::: ##::::. #######:: ##:::. ##:\n\
-    :......:::....::..:::::..:::.......:::........::..:::::..:::::..::::::.......:::..:::::..::\n";
-    
-    delay();
-    cout << "\nWELCOME!\n\n";
-    delay();
-    cout << "Welcome to the text-based game of university life simulator! In this game, you will play as a freshman starting your journey at the prestigious Hong Kong University (HKU).";
-    delay();
-    cout << "After enrolled in your dream school ---- HKU, you feel excited to begin this new chapter of your life and to explore all the opportunities that come with university education.";
-    delay();
-    cout << "As a student, you will navigate through different events and situations that simulate various aspects of university life, such as academics, social activities, and personal relationships.";
-    delay();
-    cout << "Every decision you make will have consequences, and your ultimate goal is to achieve success while maintaining a balance between your academic and personal priorities.";
-    delay();
-    cout << "Are you ready to embark on this exciting and unpredictable journey as a freshman at HKU? Let's begin and see where life takes you on campus!";
-}
-
-string input() {
-    string c;
-    cout << "Your prompt here: \n";
-    cin >> c;
-    return c;
-}
-
 int main() {
 
-    printTitle();
+    initscr();
+
+    initial_config();
+    title_interface();
+    getch();
     
+    main_interface();
     while (true) {
-        cout << "1. New Game\n2. Load Game\n3. Tutorial\n4. Config\nq. [EXIT]\n";
-        string op = input();
-        if (op == "1" || op == "2" || op == "3" || op == "4") 
+        output_in_main(" Your prompt here: ");
+        string op = input_in_main();
+        if (op == "2" || op == "4")
                 break;
-        else if (op == "q") {
-            cout << "Are you sure to exit? (Y/N)\n";
-            op = input();
+        else if (op == "1") {
+            output_in_main(" Adapt to Linux in progress... ");
+            getch();
+        } else if (op == "3") {
+            tutorial_interface();
+        } else if (op == "q") {
+            output_in_main(" Are you sure to exit? (Y/N): ");
+            op = input_in_main();
             if (op == "Y") 
-                return 0;
+                break;
         } else {
-            cout << "Invalid prompt!\n";
+            output_in_main(" Invalid prompt! (Press any key to proceed...)");
+            getch();
         }
     }
     
-    player newPlayer;
-    newPlayer.init();
+//    player newPlayer;
+//    newPlayer.init();
 
-    system("pause");
+//    system("pause");
+
+    endwin();
+
+    cout << "\n\nThis part needs further developing...\n";
 
     return 0;
 }
