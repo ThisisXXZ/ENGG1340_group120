@@ -4,10 +4,11 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdio>
+#include <unistd.h>
 #include "player.h"
+#include "interface.h"
 
 using namespace std;
-
 
 void player::colorPrint(string s, int col) {
     cout << s << endl;
@@ -123,20 +124,22 @@ void player::printTranscript() {
 //    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
 }
 
-void player::init() {
+void player::init(interface& INT) {
     srand(time(0));
-    std::string text = "After all these years of hard work, You have "
+    std::string text = "After all these years of hard work, You've "
                        "finally got the chance to be admitted into HKU!\n"
                        "This is the school of your dream; you know you have to take the chance.\n"
                        "Now you are about to face your final challenge: completing the application"
                        " form.\n\n";
-    colorPrint(text, 5);
+    INT.output_in_game(text);
     text = "(Your fingers are trembling with nervousness.)\n";
-    colorPrint(text, 1);
+    INT.output_in_game(text, 1, true, true, true, true);
+    sleep(2);
     text = "\n\n[the University of Hong Kong: Application form]\n\n";
-    colorPrint(text, 5);
+    INT.output_in_game(text);
+    getch();
 
-
+/*
     initName();
     initSex();
     initVal();
@@ -183,5 +186,6 @@ void player::init() {
         }
 
     }
+    */
 }
 
