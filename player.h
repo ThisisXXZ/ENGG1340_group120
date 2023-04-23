@@ -2,6 +2,9 @@
 #define PLAYER
 
 #include <string>
+#include <ncurses.h>
+
+#include "interface.h"
 
 class player {
     std::string name;
@@ -18,10 +21,10 @@ public:
     void initSex();
     void initVal();
     void initSkill();
-    void init();
+    void init(interface&);
 
     void printTranscript();
-    void colorPrint(std::string s, int col);  // need to convert to Linux mode
+    void colorPrint(std::string, int);  // need to convert to Linux mode
 /*
     void modifyIq(int d);
     void modifyEq(int d);
