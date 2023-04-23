@@ -33,9 +33,11 @@ public:
     void tutorial_interface();
 
     void game_interface();
+    string input_in_game_str(string prom = "Your prompt here: ");
+    int input_in_game_int(string prom = "Your prompt here: ");
     void output_in_game(string s, int col = 7, bool typ = true, 
                         bool udl = false, bool blk = false, 
-                        bool bld = false);
+                        bool bld = false, string des = "%s");
 };
 
 #endif
