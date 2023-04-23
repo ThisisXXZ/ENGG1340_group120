@@ -10,72 +10,66 @@
 
 using namespace std;
 
-void player::colorPrint(string s, int col) {
-    cout << s << endl;
-}
-
-void player::initName() {
+void player::initName(interface& INT) {
     string text = "What is your name? (English only)\n";
-    colorPrint(text, 5);
-    cin.ignore();
-    getline(cin, name);
+    INT.output_in_game(text, 4, true, true);
+    name = INT.input_in_game_str();
 }
 
-void player::initSex() {
+void player::initSex(interface& INT) {
     string text = "\nWhat is your gender?\n";
-    colorPrint(text, 5);
+    INT.output_in_game(text, 4, true, true);
     text = "(0 for male, 1 for female. 2 if you don't care and want to set it randomly)\n";
-    colorPrint(text, 4);
-    cin >> sex;
-    while (sex < 0 || sex > 2) {
-        cout << "I don't believe you will make mistakes in such things. It's a joke, right?\n";
-        cout << "Try again: ";
-        cin >> sex;
+    INT.output_in_game(text, 4);
+    int in = INT.input_in_game_int();
+    while (in != 0 && in != 1 && in != 2) {
+        text = "\nI don't believe you will make mistakes in such things. It's a joke, right?\n";
+        INT.output_in_game(text, 2);
+        in = INT.input_in_game_int("Try again: ");
     }
-    if (sex == 2)
-        sex = rand() % 2;
+    if (in == 2)  sex = rand() % 2;
     text = "\nOf course you are a " + (string)(sex ? "[girl]" : "[boy]") + ". I mean, who will doubt that?\n\n";
-    colorPrint(text, 15);
+    INT.output_in_game(text, 2);
 }
 
-void player::initVal() {
+void player::initVal(interface& INT) {
     string text = "Could you give a brief introduction on your academic achievements, "
                   "your personality and how willing you are to try new things?\n\n";
-    colorPrint(text, 5);
+    INT.output_in_game(text, 4, true, true);
     text = "(Here you are going to input 3 integers a, b and c, and their sum "
            "a + b + c = 10. [a] represents your [academic intelligence], [b] represents "
            "your [charisma] and [c] represents your [courage].)\n\n"
            "(Be careful! Your allocation will influence your university life.)\n\n";
-    colorPrint(text, 4);
+    INT.output_in_game(text, 4);
     while (true) {
-        string op;
-        cout << "Your prompt here: \n";
-        cin >> iq >> eq >> courage;
+        iq = INT.input_in_game_int("Academic intelligence (a): ");
+        eq = INT.input_in_game_int("Charisma (b): ");
+        courage = INT.input_in_game_int("Courage (c): ");
         if (iq < 0 || eq < 0 || courage < 0) {
-            cout << "Negative number? It's a joke of some kind, right?\n\n";
+            INT.output_in_game("Negative number? It's a joke of some kind, right?\n\n", 2);
             continue;
         }
         if (iq + eq + courage > 10) {
-            cout << "The sum of 3 numbers exceeds 10. Take your time, don't be too nervous.\n\n";
+            INT.output_in_game("The sum of 3 numbers exceeds 10. Take your time, don't be too nervous.\n\n", 2);
         } else if (iq + eq + courage < 10) {
-            cout << "The sum of 3 numbers is below 10. Don't be so humble!\n\n";
+            INT.output_in_game("The sum of 3 numbers is below 10. Don't be so humble!\n\n", 2);
         } else {
             break;
         }
     }
-    cout << endl;
 }
 
-void player::initSkill() {
-    string text = "What else talents you want to specify?\n\n";
-    colorPrint(text, 5);
+void player::initSkill(interface& INT) {
+    string text = "\nWhat else talents you want to specify?\n\n";
+    INT.output_in_game(text, 4, true, true);
     text = "(You may choose at most 4 [talents] of yours. However, no one is perfect. " 
            "Every 2 [talents] may result in 1 random [shortcoming]. However, "
            "[shortcomings] could be overcome in the future.)\n\n";
-    colorPrint(text, 4);
+    INT.output_in_game(text, 4);
 
     text = "(You grab your pen tightly, thinking...)\n\n";
-    colorPrint(text, 1);
+    INT.output_in_game(text, 1, true, true, true, true);
+    sleep(2);
 
     // This part should be randomized and objectivize
     text = "1. You come from a very rich family.\n   "
@@ -83,52 +77,48 @@ void player::initSkill() {
            "2. You are born with good luck.\n   "
            "(Skill [Luck is also strength]: You are more likely to success in some random events.)\n\n";
     string ski;
-    cout << text;
-    cin.ignore();
-    getline(cin, ski);
+    INT.output_in_game(text);
+    ski = INT.input_in_game_str();
     
-    cout << "!!!(This part needs further developing: Skills & Shortcomings needed!!!)\n\n";
+    INT.output_in_game("!!!(This part needs further developing: Skills & Shortcomings needed!!!)\n\n");
 }
 
-void player::printTranscript() {
+void player::printTranscript(interface& INT) {
 
-//    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-//    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 5);
-    cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-//    Sleep(200);
-    cout << "+     [the University of Hong Kong: Application form]     +\n";
-//   Sleep(200);
-    cout << "+                                                         +\n";
-//    Sleep(200);
-    cout << "+                                                         +\n";
-//    Sleep(200);
-    cout << "+ Name: " << left << setw(50) << name << "+\n";
-//    Sleep(200);
-    cout << "+                                                         +\n";
-//    Sleep(200);
-    cout << "+ Sex: " << left << setw(51) << (string)(sex ? "female" : "male") << "+\n";
-//    Sleep(200);
-    cout << "+                                                         +\n";
-//    Sleep(200);
-    cout << "+ Academic talents: " << left << setw(38) << iq << "+\n";
-//    Sleep(200);
-    cout << "+ Charisma: " << left << setw(46) << eq << "+\n";
-//    Sleep(200);
-    cout << "+ Courage: " << left << setw(47) << courage << "+\n";
-//    Sleep(200);
-    cout << "+                                                         +\n";
-//    Sleep(200);
-    cout << "+ Skills (needs developing...)                            +\n";
-//    Sleep(200);
-    cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-//    SetConsoleTextAttribute(handle, FOREGROUND_INTENSITY | 7);
+    INT.output_in_game("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game("+     [the University of Hong Kong: Application form]     +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game("+                                                         +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game("+                                                         +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game(name, 2, false, false, false, false, "+ Name: %-50s+\n");
+    sleep(0.5);
+    INT.output_in_game("+                                                         +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game((string)(sex ? "female" : "male"), 2, false, false, false, false, "+ Sex: %-51s+\n");
+    sleep(0.5);
+    INT.output_in_game("+                                                         +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game(to_string(iq), 2, false, false, false, false, "+ Academic talents: %-38s+\n");
+    sleep(0.5);
+    INT.output_in_game(to_string(eq), 2, false, false, false, false, "+ Charisma: %-46s+\n");
+    sleep(0.5);
+    INT.output_in_game(to_string(courage), 2, false, false, false, false, "+ Courage: %-47s+\n");
+    sleep(0.5);
+    INT.output_in_game("+                                                         +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game("+ Skills (needs developing...)                            +\n", 2, false);
+    sleep(0.5);
+    INT.output_in_game("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n", 2, false);
 }
 
 void player::init(interface& INT) {
     srand(time(0));
-    std::string text = "After all these years of hard work, You've "
-                       "finally got the chance to be admitted into HKU!\n"
-                       "This is the school of your dream; you know you have to take the chance.\n"
+    std::string text = "\nAfter all these years of hard work, You've "
+                       "finally got the chance to be admitted into HKU!\n\n"
+                       "This is the school of your dream; you know you have to take the chance.\n\n"
                        "Now you are about to face your final challenge: completing the application"
                        " form.\n\n";
     INT.output_in_game(text);
@@ -137,55 +127,55 @@ void player::init(interface& INT) {
     sleep(2);
     text = "\n\n[the University of Hong Kong: Application form]\n\n";
     INT.output_in_game(text);
-    getch();
 
-/*
-    initName();
-    initSex();
-    initVal();
-    initSkill();
 
+    initName(INT);
+
+    initSex(INT);
+
+    initVal(INT);
+    
+    initSkill(INT);
+    
     text = "Finished, finally!\n"
            "(You drop your pen, checking the application form carefully.)\n\n";
-    colorPrint(text, 1);
+    INT.output_in_game(text, 1, true, true, true, true);
 
     while (true) {
-        printTranscript();
+        printTranscript(INT);
 
         text = "It seems perfect, except...\n\n";
-        colorPrint(text, 5);
+        INT.output_in_game(text, 4, true, true);
         text = "1. Nuh, that's it. You are ready to submit it. \n"
                "2. There's a typo in the name and you want to change it. \n"
                "3. You realize you've written the wrong gender. Come on, seriously? \n"
                "4. You want to reallocate your talents, charisma and courage. \n"
                "5. You want to modify your skills. \n\n";
-        colorPrint(text, 7);
-        cout << "Your prompt here: ";
-        int op;
-        cin >> op;
-        while (op < 1 || op > 5) {
-            cout << "Invalid input.\n Your prompt here: ";
-            cin >> op;
-        }
+        INT.output_in_game(text, 4);
+        int op = INT.input_in_game_int();
+        while (op < 1 || op > 5)
+            op = INT.input_in_game_int("Invalid input. Your prompt here: ");
         if (op == 1) {
             text = "\n(Submitted succesfully. You let out a deep sigh and wait for the results with hope.)\n\n";
-            colorPrint(text, 1);
+            INT.output_in_game(text, 1, true, true, true, true);
+            sleep(2);
             break;
         } else if (op == 2) {
-            cout << '\n';
-            initName();
+            INT.output_in_game("\n\n");
+            initName(INT);
         } else if (op == 3) {
-            cout << '\n';
-            initSex();
+            INT.output_in_game("\n\n");
+            initSex(INT);
         } else if (op == 4) {
-            cout << '\n';
-            initVal();
+            INT.output_in_game("\n\n");
+            initVal(INT);
         } else if (op == 5) {
-            cout << '\n';
-            initSkill();
+            INT.output_in_game("\n\n");
+            initSkill(INT);
         }
 
     }
-    */
+    
+   getch();
 }
 

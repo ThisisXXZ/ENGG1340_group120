@@ -17,13 +17,13 @@ class player {
     bool specialSkill[10];  // specialSkill[1]: Money talks: Don't worry. You got money. A lot!
                             // specialSkill[2]: to be added...
 public:
-    void initName();
-    void initSex();
-    void initVal();
-    void initSkill();
+    void initName(interface&);
+    void initSex(interface&);
+    void initVal(interface&);
+    void initSkill(interface&);
     void init(interface&);
 
-    void printTranscript();
+    void printTranscript(interface&);
     void colorPrint(std::string, int);  // need to convert to Linux mode
 /*
     void modifyIq(int d);

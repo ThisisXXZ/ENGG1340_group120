@@ -10,12 +10,12 @@ using namespace std;
 void interface::color_config() { 
     if (has_colors()) {
         start_color();
-        init_pair(1, COLOR_CYAN, COLOR_BLACK);
-        init_pair(2, COLOR_GREEN, COLOR_BLACK);
-        init_pair(3, COLOR_RED, COLOR_BLACK);
-        init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+        init_pair(1, COLOR_CYAN, COLOR_BLACK);        // Cyan: mental text
+        init_pair(2, COLOR_GREEN, COLOR_BLACK);       // Green: responsive text
+        init_pair(3, COLOR_RED, COLOR_BLACK);         // Red: warning text
+        init_pair(4, COLOR_YELLOW, COLOR_BLACK);      // Yellow: interactive text
         init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
-        init_pair(7, COLOR_WHITE, COLOR_BLACK);
+        init_pair(7, COLOR_WHITE, COLOR_BLACK);       // White: normal text
     }
 }
 
@@ -175,12 +175,34 @@ void interface::game_interface() {
 //    box(game_upwin, '+', '.');
     box(game_downwin, '+', '.');
     box(game_rhtwin, '+', '.');
+    scrollok(game_upwin, true);
     touchwin(gamescr);
     wrefresh(gamescr);
-
 }
 
-void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, bool bld) {
+string interface::input_in_game_str(string prom) {
+    wmove(game_downwin, 2, 2);
+    wclrtoeol(game_downwin);
+    wprintw(game_downwin, "%s", prom.c_str());
+    touchwin(gamescr);
+    wrefresh(gamescr);
+    char s[1024];
+    wscanw(game_downwin, "%[^\n]", s);  
+    return string(s);
+}
+
+int interface::input_in_game_int(string prom) {
+    wmove(game_downwin, 2, 2);
+    wclrtoeol(game_downwin);
+    wprintw(game_downwin, "%s", prom.c_str());
+    touchwin(gamescr);
+    wrefresh(gamescr);
+    int integer;
+    wscanw(game_downwin, "%d", &integer);  
+    return integer;
+}
+
+void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, bool bld, string des) {
     int eff = 0;
     if (udl)    eff |= A_UNDERLINE;
     if (blk)    eff |= A_BLINK;
@@ -191,10 +213,10 @@ void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, 
             wprintw(game_upwin, "%c", s[i]);
             touchwin(gamescr);
             wrefresh(gamescr);
-            usleep(25000);
+            usleep(30000);
         }
     } else {
-        wprintw(game_upwin, "%s", s.c_str());
+        wprintw(game_upwin, des.c_str(), s.c_str());
         touchwin(gamescr);
         wrefresh(gamescr);
     }

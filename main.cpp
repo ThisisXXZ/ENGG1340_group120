@@ -25,6 +25,8 @@ int main() {
         else if (op == "1") {
             INT.game_interface();
             getch();
+            player newPlayer;
+            newPlayer.init(INT);
             break;
         } else if (op == "3") {
             INT.tutorial_interface();
@@ -39,8 +41,6 @@ int main() {
         }
     }
     
-    player newPlayer;
-    newPlayer.init(INT);
 
 //    system("pause");
 
