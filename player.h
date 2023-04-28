@@ -1,5 +1,5 @@
-#ifndef PLAYER
-#define PLAYER
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <string>
 #include <ncurses.h>
@@ -12,7 +12,9 @@ class player {
     int eq;                 // 魅力 charisma
     int courage;            // 勇气 courage
     int luck;               // 运气 luck
-    int sex;                // 0/1 for male/female
+    int sex;               // 0/1 for male/female
+    double gpa;             // GPA
+
 
     bool specialSkill[10];  // specialSkill[1]: Money talks: Don't worry. You got money. A lot!
                             // specialSkill[2]: to be added...
@@ -25,6 +27,13 @@ public:
 
     void printTranscript(interface&);
     void colorPrint(std::string, int);  // need to convert to Linux mode
+    void getGPA();
+    void getIQ();
+    void getEQ();
+    void getCourage();
+    void getLuck();
+    void getSex();
+    void getSpecialSkill();
 /*
     void modifyIq(int d);
     void modifyEq(int d);

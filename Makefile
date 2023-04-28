@@ -4,6 +4,9 @@ interface.o: interface.cpp interface.h
 player.o: player.cpp player.h interface.h
 	g++ -c -lncurses player.cpp
 
+event.o: event.cpp event.h player.h
+	g++ -c -lncurses event.cpp
+
 main.o: main.cpp player.h interface.h
 	g++ -c -lncurses player.cpp main.cpp 
 
