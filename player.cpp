@@ -10,6 +10,29 @@
 
 using namespace std;
 
+int player::getIq() const {
+    return iq;
+}
+
+int player::getEq() const {
+    return eq;
+}
+
+double player::getGPA() const {
+    return gpa;
+}
+int player::getSex() const {
+    return sex;
+}
+int player::getCourage() const {
+    return courage;
+}
+
+int player::getLuck() const {
+    return luck;
+}
+
+
 void player::initName(interface& INT) {
     string text = "What is your name? (English only)\n";
     INT.output_in_game(text, 4, true, true);

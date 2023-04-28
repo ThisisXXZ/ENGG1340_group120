@@ -27,13 +27,13 @@ public:
 
     void printTranscript(interface&);
     void colorPrint(std::string, int);  // need to convert to Linux mode
-    void getGPA();
-    void getIQ();
-    void getEQ();
-    void getCourage();
-    void getLuck();
-    void getSex();
-    void getSpecialSkill();
+    double getGPA() const;
+    int getIq() const;
+    int getEq() const;
+    int getCourage() const;
+    int getLuck() const;
+    int getSex() const;
+    std::string getName() const;
 /*
     void modifyIq(int d);
     void modifyEq(int d);
