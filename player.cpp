@@ -5,6 +5,8 @@
 #include <ctime>
 #include <cstdio>
 #include <unistd.h>
+#include <fstream>
+#include <sstream>
 #include "player.h"
 #include "interface.h"
 
@@ -368,4 +370,27 @@ void player::simulate_first_semester(interface& INT) {
     pressure = 0;
     simulate_ordinary_week(INT, 9, 1);
     viewYourGrades[1] = expectedGrades;
+}
+
+// Save the player's game to the specified file
+bool Player::save_game(const string &filename) {
+    ofstream save_file(filename);
+
+    // If the file fails to open, return false
+    if (!save_file.is_open()) {
+        return false;
+    }
+
+    // Save player attributes to the file
+    save_file << name << endl;
+    save_file << iq << endl;
+    save_file << eq << endl;
+    save_file << courage << endl;
+    save_file << luck << endl;
+    save_file << sex << endl;
+    save_file << gpa << endl;
+
+    // Close the file
+    save_file.close();
+    return true;
 }
