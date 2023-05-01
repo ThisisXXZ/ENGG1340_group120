@@ -19,6 +19,10 @@ class interface {
     WINDOW* game_rhtwin;                    // for game interface: subscr for gamescr
 
 public:
+
+    WINDOW* get_rhtwin();
+    WINDOW* get_gamewin();
+
     void color_config();
     void initial_config();
     void end_config();
@@ -35,6 +39,7 @@ public:
     void game_interface();
     string input_in_game_str(string prom = "Your prompt here: ");
     int input_in_game_int(string prom = "Your prompt here: ");
+    void clearwin_in_game();
     void output_in_game(string s, int col = 7, bool typ = true, 
                         bool udl = false, bool blk = false, 
                         bool bld = false, string des = "%s");

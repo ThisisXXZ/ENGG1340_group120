@@ -44,13 +44,13 @@ void player::initSex(interface& INT) {
     INT.output_in_game(text, 4, true, true);
     text = "(0 for male, 1 for female. 2 if you don't care and want to set it randomly)\n";
     INT.output_in_game(text, 4);
-    int in = INT.input_in_game_int();
-    while (in != 0 && in != 1 && in != 2) {
+    sex = INT.input_in_game_int();
+    while (sex != 0 && sex != 1 && sex != 2) {
         text = "\nI don't believe you will make mistakes in such things. It's a joke, right?\n";
         INT.output_in_game(text, 2);
-        in = INT.input_in_game_int("Try again: ");
+        sex = INT.input_in_game_int("Try again: ");
     }
-    if (in == 2)  sex = rand() % 2;
+    if (sex == 2)  sex = rand() % 2;
     text = "\nOf course you are a " + (string)(sex ? "[girl]" : "[boy]") + ". I mean, who will doubt that?\n\n";
     INT.output_in_game(text, 2);
 }
@@ -106,34 +106,63 @@ void player::initSkill(interface& INT) {
     INT.output_in_game("!!!(This part needs further developing: Skills & Shortcomings needed!!!)\n\n");
 }
 
+void player::printValue(WINDOW* rht, WINDOW* fa, string mon, int ord) {
+
+    wmove(rht, 1, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "%s: week %d", mon.c_str(), ord);
+    wmove(rht, 3, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "IQ: %d", iq);
+    wmove(rht, 4, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "EQ: %d", eq);
+    wmove(rht, 5, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "Courage: %d", courage);
+    wmove(rht, 6, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "Luck: %d", luck);
+
+    wmove(rht, 9, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "Grades: %g", expectedGrades);
+    wmove(rht, 10, 2);
+    wclrtoeol(rht);
+    wprintw(rht, "Pressure: %d", pressure);
+    box(rht, '+', '.');
+    touchwin(fa);
+    wrefresh(fa);
+}
+
 void player::printTranscript(interface& INT) {
 
     INT.output_in_game("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+     [the University of Hong Kong: Application form]     +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game(name, 2, false, false, false, false, "+ Name: %-50s+\n");
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game((string)(sex ? "female" : "male"), 2, false, false, false, false, "+ Sex: %-51s+\n");
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game(to_string(iq), 2, false, false, false, false, "+ Academic talents: %-38s+\n");
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game(to_string(eq), 2, false, false, false, false, "+ Charisma: %-46s+\n");
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game(to_string(courage), 2, false, false, false, false, "+ Courage: %-47s+\n");
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+ Skills (needs developing...)                            +\n", 2, false);
-    sleep(0.5);
+    sleep(1);
     INT.output_in_game("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n", 2, false);
 }
 
@@ -199,6 +228,144 @@ void player::init(interface& INT) {
 
     }
     
-   getch();
+   getch();     // 过场动画?
 }
 
+string month[] = {"", "January", "February", "March", 
+                    "April", "May", "June", "July", 
+                    "August", "September", "October", 
+                    "November", "December"};
+
+string order[] = {"", "first", "second", "third", "fourth"};
+
+// add weather prompt, random advice prompt!!!
+
+string player::study_prompt() {
+    if (expectedGrades < 3)
+        return "(Your expected grade is below 3. Maybe focusing on study is a better choice?)\n";
+    if (expectedGrades > 4)
+        return "(Wow...you really do love studying!)\n";
+    if (expectedGrades > 3.7)
+        return "(It seems your expected grade is satisfactory. Still want to improve?)\n";
+    return "(It's always a good choice to spend time on study, is it?)\n";
+}
+
+string player::doelse_prompt() {
+    if (pressure >= 10)
+        return "(You are under too much stress! Maybe you should do something else to change your mood.)\n";
+    return "(University is NOT all about study. Let's see what else you can do!)\n";
+}
+
+string act[3] = {"watched a popular TV series!\n", 
+                 "played a video game for a while!\n", 
+                 "watched a famous movie!\n"};
+
+void player::surf_the_internet(interface& INT) {        // news module could be created
+    srand(time(0));
+    INT.output_in_game("You " + act[rand() % 3], 2);
+    INT.output_in_game("[pressure --]", 2);
+    pressure -= 2;
+    if (pressure < 0)   pressure = 0;
+}
+
+void player::simulate_ordinary_week(interface& INT, int mon, int ord) {
+    INT.clearwin_in_game();
+    printValue(INT.get_rhtwin(), INT.get_gamewin(), month[mon], ord);
+
+    string text = "It's the " + order[ord] + " week in " + month[mon] + ".\n"
+                  "[weather prompt (developing...)]\n[advice prompt (developing...)]\n\n";
+
+    INT.output_in_game(text);
+
+    text = "It's an ordinary teaching week --- attending the courses improves your expected grades!\n"
+           "[grades +]\n";
+    expectedGrades += 0.1;
+    printValue(INT.get_rhtwin(), INT.get_gamewin(), month[mon], ord);
+    INT.output_in_game(text, 2);
+
+
+    INT.output_in_game("\n So, What's your plan?\n\n", 4, true, true);
+    text = "1. Spend all your spare time in main library / Chi Wah learning common.\n"
+           "  " + study_prompt(); 
+    INT.output_in_game(text, 4, false);
+    text = "\n2. Do something else.\n"
+           "  " + doelse_prompt();
+    INT.output_in_game(text, 4, false);
+
+    int op = INT.input_in_game_int();
+    while (op != 1 && op != 2)  op = INT.input_in_game_int("Invalid input: try again: ");
+    if (op == 1) {
+        text = "\nSpent a fufilling time at the main library...\n"
+               "[grades +++]\n"
+               "[pressure +]\n";
+        expectedGrades += 0.2 * (1.0 + iq / 10.0) * (1.0 - pressure / 10.0);
+        pressure += 1;
+        printValue(INT.get_rhtwin(), INT.get_gamewin(), month[mon], ord);
+        INT.output_in_game(text, 2);
+    }
+    if (op == 2) {
+        int op_2 = 0;
+        do {
+            INT.output_in_game("\n It's time for relaxing! What do you want to do?\n\n", 1, true, true);
+            text =  "1. Go somewhere else.\n"
+                    "   (Explore new place! Meet new people!)\n\n"
+                    "2. Spend the time on the Internet.\n"
+                    "   (Someone call it a waste of time, that's because they use it in a wrong way.)\n\n"
+                    "3. Do part-time jobs.\n"
+                    "   (Money and experience. Kill two birds with one stone)\n\n";
+            INT.output_in_game(text, 1, false);
+            op_2 = INT.input_in_game_int();
+            while (op_2 != 1 && op_2 != 2 && op_2 != 3) 
+                op_2 = INT.input_in_game_int("Invalid input. Try again: ");
+            if (op_2 == 1) {
+/*
+In this section, player could explore many different landmarks
+go to each landmark has different effects
+some landmark could facilitate as store, selling special items
+
+landmark module needed
+*/                
+                break;
+            }
+            if (op_2 == 2) {
+                surf_the_internet(INT);
+                break;
+            }
+            if (op_2 == 3) {
+/*
+player could choose different places to do part-time.
+3 part-time jobs could be designed.
+1: +1000
+2: +600 courage + 1
+3: +800 eq + 1
+*/
+                break;
+            }
+        } while (true);
+        
+        
+    }
+
+    getch();
+}
+
+/* 
+there are about 15 weeks in the first semester: here is the outline
+
+5 ordinary weeks (SEP-OCT 9th)
+1 reading week (OCT 10th-17th)
+6 ordinary weeks (OCT 18th-NOV 30th)
+1 week: revision period (DEC 1st-7th)
+2 week: assessment period (DEC 8th-23rd)
+
+Special Dates:
+National Day (OCT 1st)
+Double Ninth Festival (OCT 4th)
+*/
+
+void player::simulate_first_semester(interface& INT) {
+    expectedGrades = 0;
+    pressure = 0;
+    simulate_ordinary_week(INT, 9, 1);
+    viewYourGrades[1] = expectedGrades;
+}

@@ -14,7 +14,8 @@ void interface::color_config() {
         init_pair(2, COLOR_GREEN, COLOR_BLACK);       // Green: responsive text
         init_pair(3, COLOR_RED, COLOR_BLACK);         // Red: warning text
         init_pair(4, COLOR_YELLOW, COLOR_BLACK);      // Yellow: interactive text
-        init_pair(5, COLOR_MAGENTA, COLOR_BLACK);
+        init_pair(5, COLOR_MAGENTA, COLOR_BLACK); 
+        init_pair(6, COLOR_BLUE, COLOR_BLACK);
         init_pair(7, COLOR_WHITE, COLOR_BLACK);       // White: normal text
     }
 }
@@ -28,6 +29,9 @@ void interface::initial_config() {
 void interface::end_config() {
     endwin();
 }
+
+WINDOW* interface::get_gamewin()   { return gamescr; }
+WINDOW* interface::get_rhtwin()    { return game_rhtwin; }
 
 // title interface
 
@@ -188,6 +192,9 @@ string interface::input_in_game_str(string prom) {
     wrefresh(gamescr);
     char s[1024];
     wscanw(game_downwin, "%[^\n]", s);  
+    wclrtoeol(game_downwin);
+    touchwin(gamescr);
+    wrefresh(gamescr);
     return string(s);
 }
 
@@ -198,8 +205,18 @@ int interface::input_in_game_int(string prom) {
     touchwin(gamescr);
     wrefresh(gamescr);
     int integer;
-    wscanw(game_downwin, "%d", &integer);  
+    wscanw(game_downwin, "%d", &integer); 
+    wclrtoeol(game_downwin);
+    touchwin(gamescr);
+    wrefresh(gamescr); 
     return integer;
+}
+
+void interface::clearwin_in_game() {
+    wclear(game_upwin);
+    wmove(game_upwin, 0, 0);
+    touchwin(gamescr);
+    wrefresh(gamescr);
 }
 
 void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, bool bld, string des) {
@@ -222,3 +239,4 @@ void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, 
     }
     wattroff(game_upwin, COLOR_PAIR(col) | eff);
 }
+

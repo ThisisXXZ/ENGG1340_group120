@@ -7,6 +7,13 @@
 
 using namespace std;
 
+void new_game(interface& INT) {
+    INT.game_interface();
+    getch();                // 过场动画? 
+    player newPlayer;
+    newPlayer.init(INT);
+    newPlayer.simulate_first_semester(INT);
+}
 
 int main() {
 
@@ -23,10 +30,7 @@ int main() {
         if (op == "2" || op == "4")
                 break;
         else if (op == "1") {
-            INT.game_interface();
-            getch();
-            player newPlayer;
-            newPlayer.init(INT);
+            new_game(INT);
             break;
         } else if (op == "3") {
             INT.tutorial_interface();
@@ -41,9 +45,6 @@ int main() {
         }
     }
     
-
-//    system("pause");
-
     INT.end_config();
 
     cout << "\n\nThis part needs further developing...\n";
