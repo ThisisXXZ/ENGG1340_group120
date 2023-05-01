@@ -240,3 +240,29 @@ void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, 
     wattroff(game_upwin, COLOR_PAIR(col) | eff);
 }
 
+int interface::select_save_file() {
+    int selected_save = 1;
+    while (true) {
+        clear();
+        mvprintw(0, 0, "Select a save file:");
+        for (int i = 1; i <= 4; ++i) {
+            if (i == selected_save) {
+                attron(A_REVERSE);
+            }
+            mvprintw(i, 0, "Save %d", i);
+            if (i == selected_save) {
+                attroff(A_REVERSE);
+            }
+        }
+        int ch = getch();
+        if (ch == KEY_DOWN || ch == 's') {
+            selected_save = (selected_save % 4) + 1;
+        } else if (ch == KEY_UP || ch == 'w') {
+            selected_save = ((selected_save - 2) % 4) + 1;
+        } else if (ch == '\n' || ch == KEY_ENTER) {
+            break;
+        }
+    }
+    return selected_save;
+}
+
