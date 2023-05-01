@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include "interface.h"
 
