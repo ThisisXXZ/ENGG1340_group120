@@ -375,12 +375,10 @@ void player::simulate_first_semester(interface& INT) {
 // Save the player's game to the specified file
 bool Player::save_game(const string &filename) {
     ofstream save_file(filename);
-
     // If the file fails to open, return false
     if (!save_file.is_open()) {
         return false;
     }
-
     // Save player attributes to the file
     save_file << name << endl;
     save_file << iq << endl;
@@ -389,8 +387,55 @@ bool Player::save_game(const string &filename) {
     save_file << luck << endl;
     save_file << sex << endl;
     save_file << gpa << endl;
-
     // Close the file
     save_file.close();
+    return true;
+}
+
+// Load the player's game from the specified file
+bool Player::load_game(const string &filename) {
+    ifstream load_file(filename);
+    // If the file fails to open, return false
+    if (!load_file.is_open()) {
+        return false;
+    }
+    string line;
+    // Read player attributes from the file and assign them to the Player object
+    if (getline(load_file, line)) {
+        name = line;
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        iq = stoi(line);
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        eq = stoi(line);
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        courage = stoi(line);
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        luck = stoi(line);
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        sex = stoi(line);
+    } else {
+        return false;
+    }
+    if (getline(load_file, line)) {
+        gpa = stod(line); //convert a string to a double
+    } else {
+        return false;
+    }
+    load_file.close();
     return true;
 }
