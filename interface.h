@@ -36,6 +36,8 @@ public:
     void tut_print(WINDOW*, string);
     void tutorial_interface();
 
+    int select_save_file();
+    
     void game_interface();
     string input_in_game_str(string prom = "Your prompt here: ");
     int input_in_game_int(string prom = "Your prompt here: ");
