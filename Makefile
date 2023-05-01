@@ -14,7 +14,7 @@ main: main.o player.o interface.o
 	g++ main.o player.o interface.o -lncurses -o main
 
 clean:
-	rm -f interface.o player.o main.o main
+	rm -f interface.o player.o main.o event.o main
 
 .PHONY: clean
 

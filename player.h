@@ -38,7 +38,9 @@ public:
     
     void init(interface&);
     void printTranscript(interface&);
-    void colorPrint(std::string, int);  // need to convert to Linux mode
+    void printValue(WINDOW*, WINDOW*, string, int);      // break the abstraction a little bit
+
+    void simulate_first_semester(interface&);
     double getGPA() const;
     int getIq() const;
     int getEq() const;
