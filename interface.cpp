@@ -265,4 +265,30 @@ int interface::select_save_file() {
     }
     return selected_save;
 }
+void interface::save_game(Player &p) {
+    ofstream saveFile("save.txt");
+    if (saveFile.is_open()) {
+        saveFile << p.name << endl
+                 << p.iq << endl
+                 << p.eq << endl
+                 << p.courage << endl
+                 << p.luck << endl
+                 << p.sex << endl
+                 << p.gpa << endl;
+    }
+    saveFile.close();
+}
+void interface::load_game(Player &p) {
+    ifstream saveFile("save.txt");
+    if (saveFile.is_open()) {
+        getline(saveFile, p.name);
+        saveFile >> p.iq
+                 >> p.eq
+                 >> p.courage
+                 >> p.luck
+                 >> p.sex
+                 >> p.gpa;
+    }
+    saveFile.close();
+}
 
