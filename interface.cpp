@@ -183,7 +183,19 @@ void interface::game_interface() {
     box(game_rhtwin, '+', '.');
     scrollok(game_upwin, true);
     touchwin(gamescr);
-    wrefresh(gamescr);
+    wrefresh(gamescr); 
+    
+    while (true) {
+        int ch = getch();
+        if (ch == 'S' || ch == 's') {
+            save_game(player);
+            // 保存完成后，可以在屏幕上显示一条消息以通知玩家
+            mvprintw(0, 0, "Game saved.");
+        } else if (ch == 'q' || ch == 'Q') {
+            // 退出游戏界面的代码
+            break;
+        }
+    }
 }
 
 string interface::input_in_game_str(string prom) {
