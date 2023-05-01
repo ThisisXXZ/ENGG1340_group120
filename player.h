@@ -58,6 +58,8 @@ public:
     void modifyLuck(int d);
     void modifySpecialSkill(int id, int d, std::string reason); 
 */
+    void save_game(const string &filename);
+    bool load_game(const string &filename);
 };
 
 #endif
