@@ -523,7 +523,7 @@ bool player::do_part_time(interface& INT, bool reading) {
     if (sz == 0) {
         string text = "\n(You haven't received any job offer currently. Try visiting "
                       "some places or surfing the internet for some information.)\n\n";
-        INT.output_in_game(text, 3);
+        INT.output_in_game(text, 3, false, false, false, true);
         return false;
     } else {
         srand(time(0));
