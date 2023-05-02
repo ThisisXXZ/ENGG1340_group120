@@ -5,14 +5,20 @@
 #include <ncurses.h>
 
 #include "interface.h"
+#include "item.h"
 
 class player {
+
+    int mon;                // month
+    int ord;                // the ord-th week
+
     std::string name;
     int iq;                 // 智商 intelligence
     int eq;                 // 魅力 charisma
     int courage;            // 勇气 courage
     int luck;               // 运气 luck
-    int sex;               // 0/1 for male/female
+    int sex;                // 0/1 for male/female
+    int money;
     double gpa;             // GPA
 
 
@@ -23,6 +29,7 @@ class player {
     int pressure;
     double viewYourGrades[10];
 
+    void initLandscape(interface&);
     void initName(interface&);
     void initSex(interface&);
     void initVal(interface&);
@@ -31,16 +38,22 @@ class player {
     string study_prompt();
     string doelse_prompt();
 
-    void surf_the_internet(interface&);
-    void simulate_ordinary_week(interface&, int, int);
+    void surf_the_internet(interface&, bool);
+    void go_somewhere_else(interface&, bool);
+    void explore_the_place(interface&, string, bool);
+    bool do_part_time(interface&, bool);
+    void horseracing(interface&);
+    void shopping(interface&, string, bool);
+
+    void simulate_ordinary_week(interface&, bool, bool);
+    
+    void encounterItems(item, interface&, bool);
 
 public:
     
     void init(interface&);
     void printTranscript(interface&);
-    void printValue(WINDOW*, WINDOW*, string, int);      // break the abstraction a little bit
 
-    void simulate_first_semester(interface&);
     double getGPA() const;
     int getIq() const;
     int getEq() const;
@@ -48,7 +61,7 @@ public:
     int getLuck() const;
     int getSex() const;
     std::string getName() const;
-    void printValue(WINDOW*, WINDOW*, string, int);      // break the abstraction a little bit
+    void printValue(interface&);      // break the abstraction a little bit
 
     void simulate_first_semester(interface&);
 /*

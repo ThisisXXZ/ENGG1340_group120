@@ -27,6 +27,10 @@ void interface::initial_config() {
 }
 
 void interface::end_config() {
+    delwin(game_downwin);
+    delwin(game_rhtwin);
+    delwin(game_upwin);
+    delwin(gamescr);
     endwin();
 }
 
