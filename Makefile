@@ -1,7 +1,10 @@
 interface.o: interface.cpp interface.h
 	g++ -c -lncurses interface.cpp
 
-player.o: player.cpp player.h interface.h
+item.o: item.cpp item.h
+	g++ -c item.cpp
+
+player.o: player.cpp player.h interface.h item.h
 	g++ -c -lncurses player.cpp
 
 event.o: event.cpp event.h player.h
@@ -10,11 +13,11 @@ event.o: event.cpp event.h player.h
 main.o: main.cpp player.h interface.h
 	g++ -c -lncurses player.cpp main.cpp 
 
-main: main.o player.o interface.o
-	g++ main.o player.o interface.o -lncurses -o main
+main: main.o item.o player.o interface.o
+	g++ main.o item.o player.o interface.o -lncurses -o main
 
 clean:
-	rm -f interface.o player.o main.o event.o main
+	rm -f interface.o item.o player.o main.o event.o main
 
 .PHONY: clean
 
