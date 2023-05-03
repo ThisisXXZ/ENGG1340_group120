@@ -9,8 +9,8 @@
 
 class player {
 
-    int mon;                // month
-    int ord;                // the ord-th week
+    int ord;
+    int mon;
 
     std::string name;
     int iq;                 // 智商 intelligence
@@ -38,14 +38,14 @@ class player {
     string study_prompt();
     string doelse_prompt();
 
-    void surf_the_internet(interface&, bool);
+    
     void go_somewhere_else(interface&, bool);
     void explore_the_place(interface&, string, bool);
     bool do_part_time(interface&, bool);
     void horseracing(interface&);
     void shopping(interface&, string, bool);
 
-    void simulate_ordinary_week(interface&, bool, bool);
+   
     
     void encounterItems(item, interface&, bool);
 
@@ -54,23 +54,32 @@ public:
     void init(interface&);
     void printTranscript(interface&);
 
-    double getGPA() const;
+// getters
+    double getsGPA() const;
     int getIq() const;
     int getEq() const;
     int getCourage() const;
     int getLuck() const;
     int getSex() const;
+    int getPressure() const;
+// setters
+    void setsGPA(double);
+    void setIq(int);
+    void setEq(int);
+    void setCourage(int);
+    void setLuck(int);
+    void setPressure(int);
+
     std::string getName() const;
     void printValue(interface&);      // break the abstraction a little bit
 
-    void simulate_first_semester(interface&);
-/*
-    void modifyIq(int d);
-    void modifyEq(int d);
-    void modifyCourage(int d);
-    void modifyLuck(int d);
-    void modifySpecialSkill(int id, int d, std::string reason); 
-*/
+    void surf_the_internet(interface&, bool);
+
+    void simulate_action(interface&, bool, bool);
+    void simulate_ordinary_week(interface&, int, int, bool, bool);
+    void simulate_semester_begin();
+    void simulate_semester_end();
+
 };
 
 #endif
