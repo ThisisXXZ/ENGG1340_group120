@@ -2,185 +2,111 @@
 #define EVENT_H
 
 #include "player.h"
+#include "interface.h"
 
 #include <string>
+#include <vector>
 
 class Event {
 public:
-    int getDay();
-    int getMonth();
-    int getTime();
-    int getPlace();
 
-    Event(int DD,int MM,int t, std::string place) : DD(DD), MM(MM), t(t), place(place) {}
-    virtual void applyEvent(player& p) const;
+    int getYear();
+    int getSem();
+    int getWeek();
+    
+
+    Event(int year, int sem, int week) : year(year), sem(sem), week(week), process(0) {}
+    virtual bool applyEvent(player& p, interface& INT);
+
+    bool checktime(int, int, int);
+    int getProcess();
+    void setProcess(int);
 
 private:
-    int DD, MM;  // Date: DD/MM
-    int t;       // Time: 0-24
-    std::string place;   // Place
-    // + intelligence
+    int year, sem;       // Date: year / sem
+    int week;            // Time: 0-11
+    int process;   // Place
 };
 
 class StrugglingInClass : public Event {
 public: 
-    StrugglingInClass(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    StrugglingInClass(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
 
-void StrugglingInClass::applyEvent(player& p) const {
-    // Implementation for StrugglingInClass event
-}
 
 class MissingDeadline : public Event {
 public: 
-    MissingDeadline(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    MissingDeadline(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void MissingDeadline::applyEvent(player& p) const {
-    // Implementation for MissingDeadline event
-}
 
 class JoiningClubs : public Event {
 public: 
-    JoiningClubs(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    JoiningClubs(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void JoiningClubs::applyEvent(player& p) const {
-    // Implementation for JoiningClubs event
-}
 
 class InternshipOrCoop : public Event {
 public: 
-    InternshipOrCoop(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    InternshipOrCoop(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void InternshipOrCoop::applyEvent(player& p) const {
-    // Implementation for InternshipOrCoop event
-}
 
 class StudyAbroad : public Event {
 public: 
-    StudyAbroad(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    StudyAbroad(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void StudyAbroad::applyEvent(player& p) const {
-    // Implementation for StudyAbroad event
-}
 
 class Scholarships : public Event {
 public: 
-    Scholarships(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    Scholarships(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void Scholarships::applyEvent(player& p) const {
-    // Implementation for Scholarships event
-}
-
-class CatchCOVID19 : public Event {
-public:
-    CatchCOVID19(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
-};
-
-void CatchCOVID19::applyEvent(player &p) const {
-    // Implementation for CatchCOVID19 event
-}
 
 class Depression : public Event {
 public:
-    Depression(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
+    Depression(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void Depression::applyEvent(player &p) const {
-    // Implementation for Depression event
-}
-
-class AcademicChallenge : public Event {
-public:
-    AcademicChallenge(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
-};
-
-void AcademicChallenge::applyEvent(player &p) const {
-    // Implementation for AcademicChallenge event
-}
-
-class SingleLife : public Event {
-public:
-    SingleLife(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
-};
-
-void SingleLife::applyEvent(player &p) const {
-    // Implementation for SingleLife event
-}
-
 
 class Relationship : public Event {
 public:
-    Relationship(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
+    Relationship(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void Relationship::applyEvent(player &p) const {
-    // Implementation for Relationship event
-}
 
 class Minor : public Event {
 public:
-    Minor(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player &p) const override;
+    Minor(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
-
-void Minor::applyEvent(player &p) const {
-    // Implementation for Minor event
-}
-
-class Job : public Event {
-public: 
-    Job(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
-};
-
-void Job::applyEvent(player& p) const {
-    // Implementation for Job event
-}
-
-class GRE : public Event {
-public: 
-    GRE(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
-};
-
-void GRE::applyEvent(player& p) const {
-    // Implementation for GRE event
-}
 
 class GraduateCapstone : public Event {
 public: 
-    GraduateCapstone(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    GraduateCapstone(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
 
-void GraduateCapstone::applyEvent(player& p) const {
-    // Implementation for GraduateCapstone event
-}
-
-class PostGraduation : public Event {
+class WatchDanceShow : public Event {
 public: 
-    PostGraduation(int DD, int MM, int t, std::string place) : Event(DD, MM, t, place) {}
-    void applyEvent(player& p) const override;
+    WatchDanceShow(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
 };
 
-void PostGraduation::applyEvent(player& p) const {
-    // Implementation for PostGraduation event
-}
+class WatchDebateCompetition : public Event {
+public:
+    WatchDebateCompetition(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
+};
+
+class GotoChurch : public Event {
+public:
+    GotoChurch(int year, int sem, int week) : Event(year, sem, week) {}
+    bool applyEvent(player& p, interface& INT) override;
+};
+
+
 
 #endif // EVENT_H

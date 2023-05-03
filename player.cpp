@@ -22,8 +22,8 @@ int player::getEq() const {
     return eq;
 }
 
-double player::getGPA() const {
-    return gpa;
+double player::getsGPA() const {
+    return expectedGrades;
 }
 int player::getSex() const {
     return sex;
@@ -34,6 +34,36 @@ int player::getCourage() const {
 
 int player::getLuck() const {
     return luck;
+}
+
+int player::getPressure() const {
+    return pressure;
+}
+
+// SETTERS
+
+void player::setIq(int d) {
+    iq = d;
+}
+
+void player::setEq(int d) {
+    eq = d;
+}
+
+void player::setsGPA(double d) {
+    expectedGrades = d;
+}
+
+void player::setCourage(int d) {
+    courage = d;
+}
+
+void player::setLuck(int d) {
+    luck = d;
+}
+
+void player::setPressure(int d) {
+    pressure = d;
 }
 
 // INIT_MODULE
@@ -214,6 +244,8 @@ void player::init(interface& INT) {
     initVal(INT);
     initSkill(INT);
     money = 3000;
+    pressure = 0;
+    luck = 0;
     
     text = "Finished, finally!\n"
            "(You drop your pen, checking the application form carefully.)\n\n";
@@ -397,7 +429,7 @@ void player::initLandscape(interface& INT) {  // cost, iq, eq, courage, luck, sk
 
 void player::horseracing(interface& INT) {
     srand(time(0));
-    int rd = rand() % 10;
+    int rd = rand() % 10 + 1;
 
     INT.output_in_game("\nWhich horse you think will run the fastest?\n", 4, true, true);
     INT.output_in_game("(Please enter a number between 1 - 10)\n", 4, false);
@@ -514,6 +546,7 @@ void player::go_somewhere_else(interface& INT, bool reading) {
     }
     INT.output_in_game("\nGoing out reduces your pressure...\n", 2);
     INT.output_in_game("[pressure --]\n", 2);
+    printValue(INT);
 }
 
 // PART_TIME MODULE
@@ -536,14 +569,12 @@ bool player::do_part_time(interface& INT, bool reading) {
     return true;
 }
 
-void player::simulate_ordinary_week(interface& INT, bool reading, bool revision) {
+void player::simulate_ordinary_week(interface& INT, int _ord, int _mon, bool reading, bool revision) {
+    ord = _ord, mon = _mon;
     INT.clearwin_in_game();
     printValue(INT);
 
     string text = "It's the " + order[ord] + " week in " + month[mon] + ".\n\n";
-
-// weather prompt?
-
     INT.output_in_game(text, 7, false);
 
     if (revision) {
@@ -560,7 +591,11 @@ void player::simulate_ordinary_week(interface& INT, bool reading, bool revision)
     }
 
     INT.output_in_game(text, 2);
+}
 
+void player::simulate_action(interface& INT, bool reading, bool revision) {
+
+    string text;
     do {
         INT.output_in_game("\n So, What's your plan?\n\n", 4, true, true);
         text = "1. Spend all your spare time in main library / Chi Wah learning common.\n"
@@ -611,8 +646,6 @@ void player::simulate_ordinary_week(interface& INT, bool reading, bool revision)
             }   
         }
     } while (true);
-
-    getch();
 }
 
 /* 
@@ -629,34 +662,10 @@ National Day (OCT 1st)
 Double Ninth Festival (OCT 4th)
 */
 
-void player::simulate_first_semester(interface& INT) {
-
-//    iq = eq = 3, courage = 4;
-//    initLandscape(INT);
-//    parttimeId.clear();
-// for test
+void player::simulate_semester_begin() {
     expectedGrades = 0;
-    pressure = 0;
-    // September
-    mon = 9;
-    for (ord = 1; ord <= 4; ++ord)  simulate_ordinary_week(INT, false, false);
+}
 
-    // October
-    mon = 10, ord = 1;
-    simulate_ordinary_week(INT, false, false);
-    ord = 2;
-    simulate_ordinary_week(INT, true, false);
-    for (ord = 3; ord <= 4; ++ord)  simulate_ordinary_week(INT, false, false);
-
-    // November
-    mon = 11;
-    for (ord = 1; ord <= 4; ++ord)  simulate_ordinary_week(INT, false, false);
-
-    mon = 12, ord = 1;
-    simulate_ordinary_week(INT, false, true);
-    ord = 2;
-    
-    getch();
-
+void player::simulate_semester_end() {
     viewYourGrades[1] = expectedGrades;
 }
