@@ -9,3 +9,4 @@ STEP:
 2.Input command: make main
 3.Input command: ./main
 4.ENJOY THE GAME!
+PS:Please be patient and wait for the sentences appearing completely without pressing [Enter]!It may cause you to miss some important choices......
