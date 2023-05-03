@@ -91,10 +91,10 @@ void new_game(interface& INT) {
     INT.game_interface();
     getch();                // 过场动画? 
     player newPlayer;
-//    newPlayer.init(INT);
+
 //    newPlayer.simulate_first_semester(INT);
     srand(time(0));
-    simulate(INT, 1, 2, 13, newPlayer);
+    simulate(INT, 1, 1, 1, newPlayer);
 }
 
 int main() {
