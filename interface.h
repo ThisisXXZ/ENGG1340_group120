@@ -17,6 +17,12 @@ class interface {
     WINDOW* game_upwin;
     WINDOW* game_downwin;
     WINDOW* game_rhtwin;                    // for game interface: subscr for gamescr
+    WINDOW* savescr;
+    WINDOW* save_upwin;
+    WINDOW* save_downwin;                   // for save interface
+    WINDOW* loadscr;
+    WINDOW* load_upwin;
+    WINDOW* load_downwin;
 
 public:
 
@@ -43,6 +49,10 @@ public:
     void output_in_game(string s, int col = 7, bool typ = true, 
                         bool udl = false, bool blk = false, 
                         bool bld = false, string des = "%s");
+    string input_in_save(string prom = "Your prompt here: ");
+    void save_interface(string&);
+    string input_in_load(string prom = "Your prompt here: ");
+    void load_interface(string&);
 };
 
 #endif

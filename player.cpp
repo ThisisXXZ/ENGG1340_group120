@@ -14,6 +14,10 @@ using namespace std;
 
 // GETTERS
 
+string player::getName() const {
+    return name;
+}
+
 int player::getIq() const {
     return iq;
 }
@@ -36,11 +40,42 @@ int player::getLuck() const {
     return luck;
 }
 
+int player::getMoney() const {
+    return money;
+}
+
 int player::getPressure() const {
     return pressure;
 }
 
+void player::getGrades(double* g, int& num) {
+    for (int i = 0; i < viewYourGrades.size(); ++i)
+        g[i] = viewYourGrades[i];
+    num = viewYourGrades.size();
+}
+
+void player::getvisited(bool* _v) {
+    for (int i = 0; i < 10; ++i)
+        _v[i] = visited[i];
+}
+
+void player::getUnlocked(string* _u, int& num) {
+    for (int i = 0; i < unlockedLandmarks.size(); ++i)
+        _u[i] = unlockedLandmarks[i];
+    num = unlockedLandmarks.size();
+}
+
+void player::getParttimeid(int* pt, int& num) {
+    for (int i = 0; i < parttimeId.size(); ++i)
+        pt[i] = parttimeId[i];
+    num = parttimeId.size();
+}
+    
+
 // SETTERS
+void player::setName(string d) {
+    name = d;
+}
 
 void player::setIq(int d) {
     iq = d;
@@ -62,8 +97,39 @@ void player::setLuck(int d) {
     luck = d;
 }
 
+void player::setSex(int d) {
+    sex = d;
+}
+
+void player::setMoney(int d) {
+    money = d;
+}
+
 void player::setPressure(int d) {
     pressure = d;
+}
+
+void player::setGrades(double* g, int num) {
+    viewYourGrades.clear();
+    for (int i = 0; i < num; ++i)
+        viewYourGrades.push_back(g[i]);
+}
+
+void player::setvisited(bool* g) {
+    for (int i = 0; i < 10; ++i)
+        visited[i] = g[i];
+}
+
+void player::setUnlocked(string* g, int num) {
+    unlockedLandmarks.clear();
+    for (int i = 0; i < num; ++i)
+        unlockedLandmarks.push_back(g[i]);
+}
+
+void player::setParttimeid(int* g, int num) {
+    parttimeId.clear();
+    for (int i = 0; i < num; ++i)
+        parttimeId.push_back(g[i]);
 }
 
 // INIT_MODULE
@@ -150,6 +216,15 @@ void player::initSkill(interface& INT) {
     INT.output_in_game("!!!(This part needs further developing: Skills & Shortcomings needed!!!)\n\n");
 }
 
+void player::game_config(interface& INT, string& filename) {
+    noecho();
+    char c = wgetch(INT.get_gamewin());
+    echo();
+    if (c == 'c') {
+        INT.save_interface(filename);
+    }   
+}
+
 void player::printValue(interface& INT) {
     WINDOW* rht = INT.get_rhtwin();
     WINDOW* fa = INT.get_gamewin();
@@ -210,21 +285,23 @@ void player::printTranscript(interface& INT) {
 //    sleep(1);
     INT.output_in_game("+                                                         +\n", 2, false);
 //    sleep(1);
-    INT.output_in_game("+ Skills (needs developing...)                            +\n", 2, false);
+    INT.output_in_game("+                                                         +\n", 2, false);
 //    sleep(1);
     INT.output_in_game("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n", 2, false);
 }
 
-vector<int> parttimeId;
+
 const string landmark[10] = {"Victoria Peak", "Lantau Island", "Wong Tai Sin", "Science Park", 
                              "Sha Tin Racecourse", "Hong Kong Coliseum", "Causeway Bay"};
-vector<string> unlockedLandmarks;
+
 map<string, vector<item> > itemList;
-bool visited[10];
 
 void player::init(interface& INT) {
     initLandscape(INT);
     parttimeId.clear();
+    unlockedLandmarks.clear();
+    for (int i = 0; i < 10; ++i)    visited[i] = 0;
+    viewYourGrades.clear();
     srand(time(0));
     std::string text = "\nAfter all these years of hard work, You've "
                        "finally got the chance to be admitted into HKU!\n\n"
@@ -242,13 +319,13 @@ void player::init(interface& INT) {
     initName(INT);
     initSex(INT);
     initVal(INT);
-    initSkill(INT);
-    money = 3000;
+    money = 5000;
     pressure = 0;
     luck = 0;
     
     text = "Finished, finally!\n"
            "(You drop your pen, checking the application form carefully.)\n\n";
+    sleep(2);
     INT.output_in_game(text, 1, true, true, true, true);
 
     while (true) {
@@ -259,11 +336,10 @@ void player::init(interface& INT) {
         text = "1. Nuh, that's it. You are ready to submit it. \n"
                "2. There's a typo in the name and you want to change it. \n"
                "3. You realize you've written the wrong gender. Come on, seriously? \n"
-               "4. You want to reallocate your talents, charisma and courage. \n"
-               "5. You want to modify your skills. \n\n";
+               "4. You want to reallocate your talents, charisma and courage. \n";
         INT.output_in_game(text, 4, false);
         int op = INT.input_in_game_int();
-        while (op < 1 || op > 5)
+        while (op < 1 || op > 4)
             op = INT.input_in_game_int("Invalid input. Your prompt here: ");
         if (op == 1) {
             text = "\n(Submitted succesfully. You let out a deep sigh and wait for the results with hope.)\n\n";
@@ -279,14 +355,10 @@ void player::init(interface& INT) {
         } else if (op == 4) {
             INT.output_in_game("\n\n");
             initVal(INT);
-        } else if (op == 5) {
-            INT.output_in_game("\n\n");
-            initSkill(INT);
-        }
-
+        } 
     }
     
-   getch();     // 过场动画?
+   getch();    
 }
 
 
@@ -362,13 +434,14 @@ void player::surf_the_internet(interface& INT, bool reading) {        // news mo
     srand(time(0));
     INT.output_in_game("You " + act[rand() % 3], 2);
     INT.output_in_game("[pressure --]", 2);
-    pressure -= 2;
+    pressure -= 3;
     if (reading) {
         INT.output_in_game("\n(Reading week bonus: pressure decreases more than ordinary week)\n", 2);
         INT.output_in_game("[pressure -]", 2);
         pressure--;
     }
     if (pressure < 0)   pressure = 0;
+    printValue(INT);
     int rd = rand() % 2, sz = unlockedLandmarks.size();
     if (rd == 1 && sz != 0) {
         rd = rand() % sz;
@@ -381,10 +454,6 @@ void player::surf_the_internet(interface& INT, bool reading) {        // news mo
                           "Your ability improves the same as [visiting] the place when "
                           "[doing part-time job] there.)\n\n";
             INT.output_in_game(text, 3, false, false, false, true);
-            item visit = itemList[unlockedLandmarks[rd]][0];
-            item part_time(-1000, visit.addiq(), visit.addeq(), visit.addcourage(), 
-                            visit.addluck(), 0, "[Doing part-time job]", visit.description());
-            itemList[unlockedLandmarks[rd]].push_back(part_time);
             parttimeId.push_back(rd);
         }
     }
@@ -425,6 +494,15 @@ void player::initLandscape(interface& INT) {  // cost, iq, eq, courage, luck, sk
     itemList["Causeway Bay"].push_back(item(3000, 0, 0, 5, 0, 0, "[Watching a horror movie in cinema]", des));
     des = "\n   (Mystic Stone Store? Looks pretty suspicious, should we try it?)\n";
     itemList["Causeway Bay"].push_back(item(3000, 0, 0, 0, 5, 0, "[Buying a mystic stone]", des));
+
+    for (int rd = 0; rd < 8; ++rd) {
+        if (itemList[landmark[rd]].size() == 1) {
+            item visit = itemList[landmark[rd]][0];
+            item part_time(-1000, visit.addiq(), visit.addeq(), visit.addcourage(), 
+                            visit.addluck(), 0, "[Doing part-time job]", visit.description());
+            itemList[landmark[rd]].push_back(part_time);
+        }
+    }
 }
 
 void player::horseracing(interface& INT) {
@@ -439,12 +517,13 @@ void player::horseracing(interface& INT) {
         op = INT.input_in_game_int("Invalid input! please enter a number between 1 - 10: ");
     if (luck > 10) {
         INT.output_in_game("\nYour are extremely lucky (luck > 10)! You could always bet on the winning horse!\n", 2);
-        INT.output_in_game("\nYou earned quite a bonus! [Money ++]\n\n", 2);
+        INT.output_in_game("\nYou earned quite a bonus! \n[Money ++]\n\n", 2);
         money += 3000;
     } else {
         INT.output_in_game("\nThe winning horse number is [" + to_string(rd) + "] !\n");
         if (rd == op) {
-            INT.output_in_game("\nYou earned quite a bonus! [Money ++]\n\n", 2);
+            INT.output_in_game("\nYou earned quite a bonus! \n[Money ++]\n\n", 2);
+            money += 3000;
         } else {
             INT.output_in_game("\n Hmmmm...You are obviously not an expert on this. You may improve your [luck] and try next time!\n", 1);
         }
@@ -546,6 +625,8 @@ void player::go_somewhere_else(interface& INT, bool reading) {
     }
     INT.output_in_game("\nGoing out reduces your pressure...\n", 2);
     INT.output_in_game("[pressure --]\n", 2);
+    pressure--;
+    if (pressure < 0)   pressure = 0;
     printValue(INT);
 }
 
@@ -666,6 +747,237 @@ void player::simulate_semester_begin() {
     expectedGrades = 0;
 }
 
-void player::simulate_semester_end() {
-    viewYourGrades[1] = expectedGrades;
+void player::simulate_assessment_period(interface& INT) {
+    INT.clearwin_in_game();
+    ord += 1;
+    printValue(INT);
+    string text = "It's the final [assessment period] of this semester!\n"
+                  "It's time to test what you've learnt this semester...\n\n";
+    INT.output_in_game(text, 2);
+    text = "Your intelligence / IQ is: " + to_string(iq) + "\n\n"
+           "Your luck is: " + to_string(luck) + "\n\n";
+    INT.output_in_game(text, 1, true, false, false, true);
+    expectedGrades *= (iq / 40 + 1.0);
+    if (luck >= 10) {
+        text = "\nYour excessive luck makes you even can guess the right answers!\n"
+               "[grades +++]\n\n";
+        INT.output_in_game(text, 2);
+        expectedGrades += 0.5;
+    }
+    printValue(INT);
+    string GRADE;
+    if (expectedGrades >= 4.3)      { GRADE = "A+", viewYourGrades.push_back(4.3); }
+    else if (expectedGrades >= 4)   { GRADE = "A", viewYourGrades.push_back(4); }
+    else if (expectedGrades >= 3.6) { GRADE = "A-", viewYourGrades.push_back(3.6); }
+    else if (expectedGrades >= 3.3) { GRADE = "B+", viewYourGrades.push_back(3.3); }
+    else if (expectedGrades >= 3)   { GRADE = "B", viewYourGrades.push_back(3); }
+    else if (expectedGrades >= 2.6) { GRADE = "B-", viewYourGrades.push_back(2.6); }
+    else if (expectedGrades >= 2.3) { GRADE = "C+", viewYourGrades.push_back(2.3); }
+    else if (expectedGrades >= 2.0) { GRADE = "C", viewYourGrades.push_back(2); }
+    else if (expectedGrades >= 1.6) { GRADE = "C-", viewYourGrades.push_back(1.6); }
+    else { GRADE = "D", viewYourGrades.push_back(1.5); }
+
+    text = "Your final letter grade of this semester is...\n\n";
+    INT.output_in_game(text, 1, true, false, false, true);
+    sleep(2);
+    INT.output_in_game(GRADE + "!\n\n", 1, true, false, false, true);
+    getch();
 }
+
+void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainProcess, int vacation) {
+    
+    if (vacation != 0)  simulate_assessment_period(INT);
+    INT.clearwin_in_game();
+    mon += 1, ord = 1;
+    if (mon == 13)  mon = 1;
+    printValue(INT);
+
+    if (vacation != 0) {
+        string vac = (vacation == 1) ? "Winter" : "Summer";
+        string text = "It's the [" + vac + " vacation] !\n"
+                      "Relax well or continue to improve yourself, it's up to you!\n\n";
+        INT.output_in_game(text, 2);
+        text = "(Vacation will last for quite a long time: It's a great time to overcome "
+               "your shortnesses! Make appropriate choices to balance your abilities...)\n\n";
+        INT.output_in_game(text, 3, true, false, false, true);
+
+        if (sch == 1) {
+            INT.output_in_game("\nNew email!\n", 2);
+            INT.output_in_game("\nThe result of the scholarship project that you previously applied has released!\n\n", 2);
+            if (viewYourGrades.back() >= 2.3) {
+                string text = "Your achievements have impressed the funders deeply!\n"
+                              "[Money +++]\n\n";
+                INT.output_in_game(text, 2);
+                money += 5000;
+                printValue(INT);
+            } else {
+                string text = "Unfortunately, you haven't been chosen...\n\n";
+                INT.output_in_game(text, 2);
+                text = "(Improve your grades or participate in more activities and try to apply next time!)\n\n";
+                INT.output_in_game(text, 3, true, false, false, true);
+            }
+        }
+        if (dep == 1 && pressure >= 10) {
+            string text = "\nExcessive anxiety overwhelms you...\n"
+                          "You start to feel disinterested in everything...\n\n";
+            INT.output_in_game(text, 1, true, false, true);
+            text = "You've built up too much pressure! ([pressure >= 10])\n"
+                   "[Suffer from depression]\n\n";
+            INT.output_in_game(text, 3, true, false, false, true);
+            text = "This vacation, You are taken by your parents to a specialist psychiatric facility for treatment...\n"
+                   "[Pressure ------]\n\n";
+            INT.output_in_game(text, 2);
+            pressure = 0;
+            printValue(INT);
+            return;
+        }
+        if (mainProcess[0] == 1) {
+            INT.output_in_game("\nNew email!\n", 2);
+            INT.output_in_game("\nThe result of the studying abroad project that you previously applied has released!\n\n", 2);
+            if (viewYourGrades.back() >= 2 && money >= 8000) {
+                INT.output_in_game("\nSeems you are eligible for this project and have prepared enough money!!\n", 2);
+                string text = "\nDo you want to study abroad in this vacation? (This will cost you money 8000 $)\n";
+                INT.output_in_game(text, 4, true, true);
+                text = "\n1. Of course! It's always a good chance to exprience a different culture.\n"
+                       "2. Nah, I have other plan afterwards.\n\n";
+                INT.output_in_game(text, 4, false);
+                int op = INT.input_in_game_int("Enter your choice: ");
+                while (op != 1 && op != 2)  op = INT.input_in_game_int("Invalid input. Try again: ");
+                if (op == 1) {
+                    text = "Attended the " + vac + " courses at an overseas university!\n"
+                           "Learnt a lot and experienced a different culture...\n\n"
+                           "[Intelligence / IQ ++++]\n"
+                           "[Charisma / EQ ++++]\n\n";
+                    INT.output_in_game(text, 2);
+                    iq += 4, eq += 4;
+                    text = "[Money ----]\n\n";
+                    money -= 8000;
+                    INT.output_in_game(text, 3, true, false, false, true);\
+                    printValue(INT);
+                    mainProcess[0] = 3;
+                    return;
+                } 
+            } else {
+                string text = "Unfortunately, it seems you are not eligible for this project right now...\n\n";
+                INT.output_in_game(text, 2);
+                text = "(Improve your grades and earn enough money (8000 $ at least), then try to apply next time!)\n\n";
+                INT.output_in_game(text, 3, true, false, false, true);
+                mainProcess[0] = 0;
+            }
+        }
+
+        if (mainProcess[1] == 1) {
+            INT.output_in_game("\nNew email!\n", 2);
+            INT.output_in_game("\nThe result of the short-term internship project that you previously applied has released!\n", 2);
+            if (viewYourGrades.back() >= 3) {
+                INT.output_in_game("\nSeems you are eligible for this project!!\n", 2);
+                string text = "\nDo you want work as intern in this vacation?\n";
+                INT.output_in_game(text, 4, true, true);
+                text = "\n1. Of course! It will be an invaluable experience before I actually get to work.\n"
+                       "2. Nah, I have other plan afterwards.\n\n";
+                INT.output_in_game(text, 4, false);
+                int op = INT.input_in_game_int("Enter your choice: ");
+                while (op != 1 && op != 2)  op = INT.input_in_game_int("Invalid input. Try again: ");
+                if (op == 1) {
+                    text = "Doing the internship in a famous company!\n"
+                           "Gained work experience and learnt how to collaborate with others...\n\n"
+                           "[Money +++]\n"
+                           "[Courage ++++]\n"
+                           "[Charisma / EQ ++++]\n\n";
+                    INT.output_in_game(text, 2);
+                    courage += 4, eq += 4;
+                    money += 6000;
+                    printValue(INT);
+                    mainProcess[0] = 3;
+                    return;
+                } 
+            } else {
+                string text = "Unfortunately, it seems you are not eligible for this project right now...\n\n";
+                INT.output_in_game(text, 2);
+                text = "(Improve your grades or participate in more activities, then try to apply next time!)\n\n";
+                INT.output_in_game(text, 3, true, false, false, true);
+                mainProcess[0] = 0;
+            }
+        }
+
+        do {
+            INT.output_in_game("\n So, What's your plan?\n\n", 4, true, true);
+            text = "1. Sign up for HKU " + vac + " programmes.\n"
+                    "   (It's always not a bad choice to earn some extra credits...)\n\n"
+                    "2. Go Travelling!\n"
+                    "   (Even if it sounds clichéd, travel is always desirable)\n\n"
+                    "3. Stay at home. Do nothing.\n"
+                    "   (A true sense of rest...you really want to do that? )\n\n"
+                    "(Other activities may be unlocked with your improved abilities...)\n\n";
+
+            INT.output_in_game(text, 4, false);
+
+            int op = INT.input_in_game_int();
+            while (op != 1 && op != 2 && op != 3)  
+                op = INT.input_in_game_int("Invalid input: try again: ");
+            if (op == 1) {
+                text = "\nSpent a fufilling time at HKU...\n"
+                        "Fulfilling though, It didn't seem like much of a vacation...\n"
+                        "[IQ +++]\n"
+                        "[pressure +]\n\n";
+                INT.output_in_game(text, 2);
+                iq += 4;
+                pressure += 2;
+                printValue(INT);
+                break;
+            }
+            if (op == 2) {
+                if (money >= 2000) {
+                    string s = (sex == 0) ? "girl" : "boy";
+                    text = "\nGo travelling with your... ";
+                    if (mainProcess[3] >= 2)    text += s;
+                    text += "friend!\n";
+                    INT.output_in_game(text, 2);
+                    text = "Exploring a whole new place widens your horizons!\n"
+                           "[Pressure --]\n"
+                           "[Charisma / EQ] ++\n\n";
+                    INT.output_in_game(text, 2);
+                    text = "[Money --]\n\n";
+                    INT.output_in_game(text, 3, true, false, false, true);
+                    money -= 2000;
+                    pressure -= 4;
+                    if (pressure < 0)   pressure = 0;
+                    eq += 4;
+                    printValue(INT);
+                    break;
+                } else {
+                    text = "\n(You cannot even afford a travel right now..."
+                           "Try to earn more money! (2000 $ at least)\n";
+                    INT.output_in_game(text, 3, true, false, false, true);
+                }
+            }   
+            if (op == 3) {
+                text = "\nReally? This is how you spend your holidays?\n"
+                        "Okay, I admit I'm a little envious of this lifestyle...\n"
+                        "[Pressure -> 0]\n"
+                        "[Luck ++++]\n\n";
+                INT.output_in_game(text, 2);
+                text = "[Intelligence / IQ -]\n"
+                       "[Charisma / EQ -]\n"
+                       "[Courage -]\n\n";
+                INT.output_in_game(text, 3, true, false, false, true);
+                pressure = 0;
+                courage --;
+                eq--;
+                iq--;
+                luck += 4;
+                printValue(INT);
+                break;
+            }
+        } while (true);
+        
+        if (mainProcess[0] == 4)
+            mainProcess[0] = 0;
+        if (mainProcess[1] == 4)
+            mainProcess[1] = 0;
+    } else {
+        
+        
+    }    
+}
+

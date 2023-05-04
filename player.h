@@ -2,13 +2,14 @@
 #define PLAYER_H
 
 #include <string>
+#include <vector>
 #include <ncurses.h>
 
 #include "interface.h"
 #include "item.h"
 
 class player {
-
+public:
     int ord;
     int mon;
 
@@ -25,11 +26,15 @@ class player {
     bool specialSkill[10];  // specialSkill[1]: Money talks: Don't worry. You got money. A lot!
                             // specialSkill[2]: to be added...
     
+    bool visited[10];
+    vector<int> parttimeId;
+    vector<string> unlockedLandmarks;
+
     double expectedGrades;
     int pressure;
-    double viewYourGrades[10];
+    vector<double> viewYourGrades;
 
-    void initLandscape(interface&);
+    
     void initName(interface&);
     void initSex(interface&);
     void initVal(interface&);
@@ -38,7 +43,6 @@ class player {
     string study_prompt();
     string doelse_prompt();
 
-    
     void go_somewhere_else(interface&, bool);
     void explore_the_place(interface&, string, bool);
     bool do_part_time(interface&, bool);
@@ -49,28 +53,43 @@ class player {
     
     void encounterItems(item, interface&, bool);
 
-public:
-    
+
+
+    void initLandscape(interface&);
     void init(interface&);
     void printTranscript(interface&);
 
 // getters
+    std::string getName() const;
     double getsGPA() const;
     int getIq() const;
     int getEq() const;
     int getCourage() const;
     int getLuck() const;
     int getSex() const;
+    int getMoney() const;
     int getPressure() const;
+    void getGrades(double*, int&);
+    void getvisited(bool*);
+    void getParttimeid(int*, int&);
+    void getUnlocked(string*, int&);
 // setters
+    void setName(std::string);
     void setsGPA(double);
     void setIq(int);
     void setEq(int);
     void setCourage(int);
     void setLuck(int);
+    void setSex(int);
+    void setMoney(int);
     void setPressure(int);
+    void setGrades(double*, int);
+    void setvisited(bool*);
+    void setParttimeid(int*, int);
+    void setUnlocked(string*, int);
+    
 
-    std::string getName() const;
+    void game_config(interface&, string&);
     void printValue(interface&);      // break the abstraction a little bit
 
     void surf_the_internet(interface&, bool);
@@ -78,7 +97,8 @@ public:
     void simulate_action(interface&, bool, bool);
     void simulate_ordinary_week(interface&, int, int, bool, bool);
     void simulate_semester_begin();
-    void simulate_semester_end();
+    void simulate_assessment_period(interface&);
+    void simulate_semester_end(interface&, int, int, int*, int);
 
 };
 

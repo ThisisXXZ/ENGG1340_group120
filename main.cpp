@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <unistd.h>
+#include <fstream>
 
 #include "event.h"
 #include "player.h"
@@ -50,8 +51,83 @@ void initMainEvents() {
     mainEvent.push_back((Event*)&m5);
 }
 
+void checkSave(interface& INT, player& p, int year, int sem, int week) {
+    string fileName = "NULL";
+    p.game_config(INT, fileName);
+    if (fileName != "NULL") {
+        ofstream fout;
+        fout.open(fileName.c_str());
+
+// attributes
+        fout << p.getName() << endl;
+        fout << p.getIq() << endl;
+        fout << p.getEq() << endl;
+        fout << p.getCourage() << endl;
+        fout << p.getLuck() << endl;
+        fout << p.getSex() << endl;
+
+        fout << p.getMoney() << endl;
+        fout << p.getPressure() << endl;
+
+// grades
+        fout << p.getsGPA() << endl;
+        
+        double g[10];
+        int cnt;
+        p.getGrades(g, cnt);
+        fout << cnt << endl;
+        for (int i = 0; i < cnt; ++i)   fout << g[i] << endl;
+
+// events
+        fout << randomEvent[0]->getProcess() << endl;
+        fout << randomEvent[1]->getProcess() << endl;
+        fout << randomEvent[2]->getProcess() << endl;
+        fout << randomEvent[3]->getProcess() << endl;
+        fout << randomEvent[4]->getProcess() << endl;
+        fout << randomEvent[5]->getProcess() << endl;
+        fout << randomEvent[6]->getProcess() << endl;
+
+        fout << mainEvent[0]->getProcess() << endl;
+        fout << mainEvent[1]->getProcess() << endl;
+        fout << mainEvent[2]->getProcess() << endl;
+        fout << mainEvent[3]->getProcess() << endl;
+        fout << mainEvent[4]->getProcess() << endl;
+// places
+        bool vis[10];
+        p.getvisited(vis);
+        for (int i = 0; i < 10; ++i)
+            fout << vis[i] << endl;
+        string unl[10];
+        p.getUnlocked(unl, cnt);
+        fout << cnt << endl;
+        for (int i = 0; i < cnt; ++i)
+            fout << unl[i] << endl;
+        int part[10];
+        p.getParttimeid(part, cnt);
+        fout << cnt << endl;
+        for (int i = 0; i < cnt; ++i)
+            fout << part[i] << endl;
+        
+// date
+        if (week == 14) {
+            if (sem == 1) {
+                sem = 2, week = 1;
+            }
+            if (sem == 2) {
+                year += 1, sem = 1, week = 1;
+            }
+        } else {
+            week += 1;
+        }
+        fout << year << endl;
+        fout << sem << endl;
+        fout << week << endl;
+        fout.close();
+    }
+}
+
 void simulate(interface& INT, int year, int sem, int week, player& p) {
-    if (year == 2) { // in fact: 5
+    if (year == 3) { // in fact: 5
         // ...
         return;
     }
@@ -59,9 +135,14 @@ void simulate(interface& INT, int year, int sem, int week, player& p) {
         p.simulate_semester_begin();
     }
     if (week == 14) {
-        // ...
-        p.simulate_semester_end();
+        int mainProcess[5] = {mainEvent[0]->getProcess(), mainEvent[1]->getProcess(), 
+                              mainEvent[2]->getProcess(), mainEvent[3]->getProcess(), 
+                              mainEvent[4]->getProcess()};
+        p.simulate_semester_end(INT, randomEvent[2]->getProcess(), randomEvent[3]->getProcess(), mainProcess, sem);      
+        mainEvent[0]->setProcess(mainProcess[0]);
+        mainEvent[1]->setProcess(mainProcess[1]);
         initRandomEvents();
+        checkSave(INT, p, year, sem, week);
         if (sem == 1) 
             simulate(INT, year, 2, 1, p);
         if (sem == 2)
@@ -82,8 +163,7 @@ void simulate(interface& INT, int year, int sem, int week, player& p) {
         if (mainEvent[i]->checktime(year, sem, week))
             mainEvent[i]->applyEvent(p, INT);
     }
-
-    getch();
+    checkSave(INT, p, year, sem, week);
     simulate(INT, year, sem, week + 1, p);
 }
 
@@ -91,10 +171,118 @@ void new_game(interface& INT) {
     INT.game_interface();
     getch();                // 过场动画? 
     player newPlayer;
-//    newPlayer.init(INT);
-//    newPlayer.simulate_first_semester(INT);
+    newPlayer.init(INT);
     srand(time(0));
-    simulate(INT, 1, 2, 13, newPlayer);
+    simulate(INT, 1, 1, 1, newPlayer);
+}
+
+void load_game(interface& INT) {
+    srand(time(0));
+    string fileName = "NULL";
+    INT.load_interface(fileName);
+    if (fileName != "NULL") {
+        player loadplayer;
+        loadplayer.initLandscape(INT);
+        INT.game_interface();
+        ifstream fin;
+        fin.open(fileName.c_str());
+
+        string dname;
+        getline(fin, dname);
+        loadplayer.setName(dname);
+
+    
+        int iq;
+        fin >> iq;
+        loadplayer.setIq(iq);
+
+
+        int eq;
+        fin >> eq;
+        loadplayer.setEq(eq);
+
+
+        int courage;
+        fin >> courage;
+        loadplayer.setCourage(courage);
+
+        int luck;
+        fin >> luck;
+        loadplayer.setLuck(luck);
+
+        int sex;
+        fin >> sex;
+        loadplayer.setSex(sex);
+
+        int money;
+        fin >> money;
+        loadplayer.setMoney(money);
+
+        int pressure;
+        fin >> pressure;
+        loadplayer.setPressure(pressure);
+
+        double sgpa;
+        fin >> sgpa;
+        loadplayer.setsGPA(sgpa);
+
+        double g[10];
+        int cnt;
+        fin >> cnt;
+        for (int i = 0; i < cnt; ++i)   fin >> g[i];
+        loadplayer.setGrades(g, cnt);
+
+        int pro;
+        fin >> pro;
+        randomEvent[0]->setProcess(pro);
+        fin >> pro;
+        randomEvent[1]->setProcess(pro);
+        fin >> pro;
+        randomEvent[2]->setProcess(pro);
+        fin >> pro;
+        randomEvent[3]->setProcess(pro);
+        fin >> pro;
+        randomEvent[4]->setProcess(pro);
+        fin >> pro;
+        randomEvent[5]->setProcess(pro);
+        fin >> pro;
+        randomEvent[6]->setProcess(pro);
+
+        fin >> pro;
+        mainEvent[0]->setProcess(pro);
+        fin >> pro;
+        mainEvent[1]->setProcess(pro);
+        fin >> pro;
+        mainEvent[2]->setProcess(pro);
+        fin >> pro;
+        mainEvent[3]->setProcess(pro);
+        fin >> pro;
+        mainEvent[4]->setProcess(pro);
+
+        bool vis[10];
+        for (int i = 0; i < 10; ++i)
+            fin >> vis[i];
+        loadplayer.setvisited(vis);
+
+        
+        string unl[10];
+        fin >> cnt;
+        fin.ignore();
+        for (int i = 0; i < cnt; ++i)   getline(fin, unl[i]);
+        loadplayer.setUnlocked(unl, cnt);
+        
+
+        int part[10];
+        fin >> cnt;
+        for (int i = 0; i < cnt; ++i)
+            fin >> part[i];
+        loadplayer.setParttimeid(part, cnt);
+
+        int year, sem, week;
+        fin >> year >> sem >> week;
+        fin.close();
+        simulate(INT, year, sem, week, loadplayer);
+    }
 }
 
 int main() {
@@ -112,9 +300,11 @@ int main() {
     while (true) {
         INT.output_in_main(" Your prompt here: ");
         string op = INT.input_in_main();
-        if (op == "2" || op == "4")
+        if (op == "4")
                 break;
-        else if (op == "1") {
+        else if (op == "2") {
+            load_game(INT);
+        } else if (op == "1") {
             new_game(INT);
             break;
         } else if (op == "3") {

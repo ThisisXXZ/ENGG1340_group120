@@ -51,7 +51,7 @@ bool StrugglingInClass::applyEvent(player& p, interface& INT) {
 
 bool MissingDeadline::applyEvent(player& p, interface& INT) {
     if (getProcess() == 3)    return false;
-    if (p.getIq() < 5 && (rand() % 2) == 0) {
+    if (p.getIq() < 10 && (rand() % 2) == 0) {
         string text = "\nOops! You just found that you've missed an important deadline!!!\n";
         INT.output_in_game(text, 1, true, false, false, true);
         
@@ -100,13 +100,16 @@ bool JoiningClubs::applyEvent(player& p, interface& INT) {
                 return false;
             }
         } else {
+            text = "\nWell, everyone has their own choice, not joining any clubs is also an experience.\n";
+            INT.output_in_game(text, 2);
             setProcess(4);
             return false;
         }
     }
     if (getProcess() == 1) {
         if (p.getCourage() >= 10) {
-            string text = "You join a student society successfully!\n";
+            string text = "\nBecause of your improved [courage], "
+                    "You join a student society successfully!\n";
                     "[EQ ++++]\n\n";
             INT.output_in_game(text, 2);
             p.setEq(p.getEq() + 2);
@@ -119,7 +122,7 @@ bool JoiningClubs::applyEvent(player& p, interface& INT) {
         string text = "\n[Enormous Courage] achieved! (courage >= 20)\n";
         INT.output_in_game(text, 1, true, false, false, true);
         text = "\nBecause of your outstanding performance in the club activities, "
-               "you were unanimously elected as the president by the club members!\n"
+               "you were unanimously elected as the president by the club members!\n\n"
                "[EQ ++++]\n"
                "[Courage ++]\n\n";
         INT.output_in_game(text, 2);
@@ -135,7 +138,7 @@ bool JoiningClubs::applyEvent(player& p, interface& INT) {
 bool InternshipOrCoop::applyEvent(player& p, interface& INT) {
     if (getProcess() >= 1)    return false;
     INT.output_in_game("\n\nNew email!\n", 2);
-    INT.output_in_game("\nYou've received an email about a short-term internship in the following vacation\n", 2);
+    INT.output_in_game("\nYou've received an email about a short-term internship in the following vacation.\n", 2);
     string text = "\nTry to apply?\n";
     INT.output_in_game(text, 4, true, true);
            text = "\n1. Of course! It will be an invaluable experience before I actually get to work.\n"
@@ -156,7 +159,7 @@ bool StudyAbroad::applyEvent(player& p, interface& INT) {
     
     if (getProcess() >= 1)    return false;
     INT.output_in_game("\n\nNew email!\n", 2);
-    INT.output_in_game("\nYou've received an email about a chance to participate the vacation session abroad!\n", 2);
+    INT.output_in_game("\nYou've received an email about a chance to study abroad in the following vacation!\n", 2);
     string text = "\nTry to apply? (This requires a lot of [money]!)\n";
     INT.output_in_game(text, 4, true, true);
            text = "\n1. Of course! It's always a good chance to exprience a different culture.\n"
@@ -200,7 +203,7 @@ bool Depression::applyEvent(player& p, interface& INT) {
         string text = "\nYou've been dizzy and weak lately and have insomnia...\n"
                       "You feel like you can't concentrate on things...\n\n";
         INT.output_in_game(text, 1, true, false, true);
-        text = "You've built up too much pressure! ([pressure > 10])\n"
+        text = "You've built up too much pressure! ([pressure >= 10])\n"
                "These symptoms are precursors to [depression], a serious mental problem.\n\n";
         INT.output_in_game(text, 3, true, false, false, true);
         text = "Maybe you should make an appointment to HKU health centre?\n";
@@ -221,9 +224,9 @@ bool Depression::applyEvent(player& p, interface& INT) {
             setProcess(1);
             return true;
         } else {
-            text = "\nYou feel that your headache is getting worse..."
+            text = "\nYou feel that your headache is getting worse...\n"
                    "[Pressure +]\n\n";
-            INT.output_in_game(text, 3, false, false, false, true);
+            INT.output_in_game(text, 3, true, false, false, true);
             p.setPressure(p.getPressure() + 1);
             p.printValue(INT);
             setProcess(1);  // need
@@ -291,7 +294,7 @@ bool Relationship::applyEvent(player& p, interface& INT) {
         string text = "\n[Enormous Charisma] achieved! (EQ >= 20)\n";
         INT.output_in_game(text, 1, true, false, false, true);
         text = "\nAlthough it may be corny to say so, after so much time together, "
-               "you are sure that your lover will be with you for the whole life...\n"
+               "you are sure that your lover will be with you for the whole life...\n\n"
                "[EQ ++++]\n"
                "[Courage ++]\n"
                "[Pressure ----]\n\n";
@@ -378,7 +381,7 @@ bool GraduateCapstone::applyEvent(player& p, interface& INT) {
         string text = "\nYou are about to graduate! Before that, you [must] complete your capstone project!\n"
                         "This requires your [comprehensive] ability!\n\n";
         INT.output_in_game(text, 4);
-        if (p.getIq() >= 20 && p.getEq() >= 15 && p.getCourage() >= 15 && p.getLuck() >= 5) {
+        if (p.getIq() >= 30 && p.getEq() >= 20 && p.getCourage() >= 20 && p.getLuck() >= 10) {
             text = "You've prepared very well for your final year capstone project!\n"
                    "No need to worry about graduation now...\n"
                    "[Pressure ---]\n\n";
@@ -390,21 +393,21 @@ bool GraduateCapstone::applyEvent(player& p, interface& INT) {
                 setProcess(3);
                 return false;
         } else {
-            text = "Your current ability seems not sufficient to complete your final year capstone project...\n";        
+            text = "It seems that your current ability is not sufficient to complete your final year capstone project...\n";        
             INT.output_in_game(text, 2);
-            if (p.getIq() < 20) {
+            if (p.getIq() < 30) {
                 text = "\n(Intelligence / IQ not enough!)\n";
                 INT.output_in_game(text, 3, true, false, false, true);
             }
-            if (p.getEq() < 15) {
+            if (p.getEq() < 20) {
                 text = "\n(Charisma / EQ not enough!)\n";
                 INT.output_in_game(text, 3, true, false, false, true);
             }
-            if (p.getCourage() < 15) {
+            if (p.getCourage() < 20) {
                 text = "\n(Courage not enough!)\n";
                 INT.output_in_game(text, 3, true, false, false, true);
             }
-            if (p.getIq() < 5) {
+            if (p.getIq() < 10) {
                 text = "\n(Luck not enough!)\n";
                 INT.output_in_game(text, 3, true, false, false, true);
             }
@@ -413,7 +416,7 @@ bool GraduateCapstone::applyEvent(player& p, interface& INT) {
         }
     }
     if (getProcess() == 1) {
-        if (p.getIq() >= 20 && p.getEq() >= 15 && p.getCourage() >= 15 && p.getLuck() >= 5) {
+        if (p.getIq() >= 30 && p.getEq() >= 20 && p.getCourage() >= 20 && p.getLuck() >= 10) {
             string text = "Today you review your ability and find that ---\n"
                           "You've prepared very well for your final year capstone project!\n"
                           "No need to worry about graduation now...\n"

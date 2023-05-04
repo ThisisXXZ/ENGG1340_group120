@@ -31,6 +31,9 @@ void interface::end_config() {
     delwin(game_rhtwin);
     delwin(game_upwin);
     delwin(gamescr);
+    delwin(save_upwin);
+    delwin(save_downwin);
+    delwin(savescr);
     endwin();
 }
 
@@ -132,7 +135,7 @@ void interface::tut_print(WINDOW* w, string s) {
     wprintw(w, "%s", s.c_str());
     touchwin(tutscr);
     wrefresh(tutscr);
-    sleep(1);
+    usleep(10000);
 }
 
 void interface::tutorial_interface() {
@@ -244,3 +247,242 @@ void interface::output_in_game(string s, int col, bool typ, bool udl, bool blk, 
     wattroff(game_upwin, COLOR_PAIR(col) | eff);
 }
 
+string interface::input_in_save(string prom) {
+    wmove(save_downwin, 2, 2);
+    wclrtoeol(save_downwin);
+    wprintw(save_downwin, "%s", prom.c_str());
+    touchwin(savescr);
+    wrefresh(savescr);
+    char s[1024];
+    wscanw(save_downwin, "%[^\n]", s);  
+    wclrtoeol(save_downwin);
+    touchwin(savescr);
+    wrefresh(savescr);
+    return string(s);
+}
+
+void interface::save_interface(string& filename) {                       
+
+    savescr = newwin(ConRow, ConCol, 0, 0);
+    box(savescr, '+', '.');
+    wrefresh(savescr);
+
+    save_upwin = subwin(savescr, ConRow - 4, ConCol, 0, 0);
+    save_downwin = subwin(savescr, 5, ConCol, ConRow - 5, 0);
+    box(save_upwin, '+', '.');
+    box(save_downwin, '+', '.');
+
+    FILE* fp;
+    fp = fopen("Save#1.txt", "r");
+    wattron(save_upwin, COLOR_PAIR(2));
+    mvwprintw(save_upwin, 1, 2, "SAVE & QUIT page");
+    if (fp == NULL) {
+        mvwprintw(save_upwin, 3, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 4, ConCol / 2 - 15, "|      Save #1: Empty       |");
+        mvwprintw(save_upwin, 5, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(save_upwin, 3, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 4, ConCol / 2 - 15, "|      Save #1: Occupied    |");
+        mvwprintw(save_upwin, 5, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#2.txt", "r");
+    wattron(save_upwin, COLOR_PAIR(4));
+    if (fp == NULL) {
+        mvwprintw(save_upwin, 7, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 8, ConCol / 2 - 15, "|      Save #2: Empty       |");
+        mvwprintw(save_upwin, 9, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(save_upwin, 7, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 8, ConCol / 2 - 15, "|      Save #2: Occupied    |");
+        mvwprintw(save_upwin, 9, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#3.txt", "r");
+    wattron(save_upwin, COLOR_PAIR(5));
+    if (fp == NULL) {
+        mvwprintw(save_upwin, 11, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 12, ConCol / 2 - 15, "|     Save #3: Empty        |");
+        mvwprintw(save_upwin, 13, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(save_upwin, 11, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 12, ConCol / 2 - 15, "|     Save #3: Occupied     |");
+        mvwprintw(save_upwin, 13, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#4.txt", "r");
+    wattron(save_upwin, COLOR_PAIR(1));
+    if (fp == NULL) {
+        mvwprintw(save_upwin, 15, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 16, ConCol / 2 - 15, "|     Save #4: Empty        |");
+        mvwprintw(save_upwin, 17, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(save_upwin, 15, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(save_upwin, 16, ConCol / 2 - 15, "|     Save #4: Occupied     |");
+        mvwprintw(save_upwin, 17, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+    wattrset(save_upwin, A_NORMAL);
+
+
+    mvwprintw(save_upwin, 19, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    mvwprintw(save_upwin, 20, ConCol / 2 - 15, "| [return]: Return to game  |");
+    mvwprintw(save_upwin, 21, ConCol / 2 - 15, "| [quit]: End the game      |");
+    mvwprintw(save_upwin, 22, ConCol / 2 - 15, "| [save]: Save current game |");
+    mvwprintw(save_upwin, 23, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+
+    touchwin(savescr);
+
+    while (true) {
+        string op = input_in_save("Enter your command: (above is the command list): ");
+        while (op != "return" && op != "quit" && op != "save") {
+            op = input_in_save("Invalid input. Do you want to [return], [quit] or [save]? ");
+        }   
+        if (op == "return") {
+            return;
+        } 
+        if (op == "quit") {
+            op = input_in_save(" Are you sure to exit? (Y/N): ");
+            if (op == "Y") {
+                end_config();
+            }
+        }
+        if (op == "save") {
+            while (true) {
+                op = input_in_save("Please select a saving unit (1-4): ");
+                while (op != "1" && op != "2" && op != "3" && op != "4")
+                    op = input_in_save("Invalid input. Please enter a number in [1, 4]: ");
+                string fileName = "Save#" + op + ".txt";
+                FILE* fp = fopen(fileName.c_str(), "r");
+                if (fp == NULL) {
+                    filename = fileName;
+                    break;
+                } else {
+                    op = input_in_save("This unit is already occupied. Do you want to overwrite it? (Y/N): ");
+                    if (op == "Y") {
+                        filename = fileName;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+string interface::input_in_load(string prom) {
+    wmove(load_downwin, 2, 2);
+    wclrtoeol(load_downwin);
+    wprintw(load_downwin, "%s", prom.c_str());
+    touchwin(loadscr);
+    wrefresh(loadscr);
+    char s[1024];
+    wscanw(load_downwin, "%[^\n]", s);  
+    wclrtoeol(load_downwin);
+    touchwin(loadscr);
+    wrefresh(loadscr);
+    return string(s);
+}
+
+void interface::load_interface(string& filename) {                  
+
+    loadscr = newwin(ConRow, ConCol, 0, 0);
+    box(loadscr, '+', '.');
+    wrefresh(loadscr);
+
+    load_upwin = subwin(loadscr, ConRow - 4, ConCol, 0, 0);
+    load_downwin = subwin(loadscr, 5, ConCol, ConRow - 5, 0);
+    box(load_upwin, '+', '.');
+    box(load_downwin, '+', '.');
+
+    FILE* fp;
+    fp = fopen("Save#1.txt", "r");
+    wattron(load_upwin, COLOR_PAIR(2));
+    mvwprintw(load_upwin, 1, 2, "LOAD page");
+    if (fp == NULL) {
+        mvwprintw(load_upwin, 3, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 4, ConCol / 2 - 15, "|      Save #1: Empty       |");
+        mvwprintw(load_upwin, 5, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(load_upwin, 3, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 4, ConCol / 2 - 15, "|      Save #1: Occupied    |");
+        mvwprintw(load_upwin, 5, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#2.txt", "r");
+    wattron(load_upwin, COLOR_PAIR(4));
+    if (fp == NULL) {
+        mvwprintw(load_upwin, 7, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 8, ConCol / 2 - 15, "|      Save #2: Empty       |");
+        mvwprintw(load_upwin, 9, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(load_upwin, 7, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 8, ConCol / 2 - 15, "|      Save #2: Occupied    |");
+        mvwprintw(load_upwin, 9, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#3.txt", "r");
+    wattron(load_upwin, COLOR_PAIR(5));
+    if (fp == NULL) {
+        mvwprintw(load_upwin, 11, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 12, ConCol / 2 - 15, "|     Save #3: Empty        |");
+        mvwprintw(load_upwin, 13, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(load_upwin, 11, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 12, ConCol / 2 - 15, "|     Save #3: Occupied     |");
+        mvwprintw(load_upwin, 13, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+
+    fp = fopen("Save#4.txt", "r");
+    wattron(load_upwin, COLOR_PAIR(1));
+    if (fp == NULL) {
+        mvwprintw(load_upwin, 15, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 16, ConCol / 2 - 15, "|     Save #4: Empty        |");
+        mvwprintw(load_upwin, 17, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    } else {
+        mvwprintw(load_upwin, 15, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+        mvwprintw(load_upwin, 16, ConCol / 2 - 15, "|     Save #4: Occupied     |");
+        mvwprintw(load_upwin, 17, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    }
+    wattrset(load_upwin, A_NORMAL);
+
+    mvwprintw(load_upwin, 19, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+    mvwprintw(load_upwin, 20, ConCol / 2 - 15, "| [return]: Return to main  |");
+    mvwprintw(load_upwin, 21, ConCol / 2 - 15, "| [quit]: End the game      |");
+    mvwprintw(load_upwin, 22, ConCol / 2 - 15, "| [load]: Load any game...  |");
+    mvwprintw(load_upwin, 23, ConCol / 2 - 15, "+++++++++++++++++++++++++++++");
+
+    touchwin(loadscr);
+
+    while (true) {
+        string op = input_in_load("Enter your command: (above is the command list): ");
+        while (op != "return" && op != "quit" && op != "load") {
+            op = input_in_load("Invalid input. Do you want to [return], [quit] or [load]? ");
+        }
+        if (op == "return") {
+            return;
+        } 
+        if (op == "quit") {
+            op = input_in_load(" Are you sure to exit? (Y/N): ");
+            if (op == "Y") {
+                end_config();
+            }
+            return;
+        }
+        if (op == "load") {
+            op = input_in_load("Please select a loading unit (1-4): ");
+            string fileName = "Save#" + op + ".txt";
+            FILE* fp = fopen(fileName.c_str(), "r");
+            while ((op != "1" && op != "2" && op != "3" && op != "4") || fp == NULL) {
+                op = input_in_load("Invalid input. Please select an [occupied] unit: ");
+                fileName = "Save#" + op + ".txt";
+                fp = fopen(fileName.c_str(), "r");
+            }
+
+            op = input_in_load(" Are you sure to load " + fileName + " ? (Y/N): ");
+            if (op == "Y") {
+                filename = fileName;
+                return;
+            }
+        }
+    }
+}
