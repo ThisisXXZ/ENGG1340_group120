@@ -27,9 +27,19 @@ int main() {
     while (true) {
         INT.output_in_main(" Your prompt here: ");
         string op = INT.input_in_main();
-        if (op == "2" || op == "4")
+        if (op == "4")
                 break;
-        else if (op == "1") {
+        else if (op == "2") {
+            int saveSlot = INT.select_save_file();
+            string saveFilename = "save" + to_string(saveSlot) + ".txt";
+            if (player.load_game(saveFilename)) {
+                INT.game_interface();
+            } else {
+                INT.output_in_main("Failed to load save file.");
+                }
+            }
+
+          else if (op == "1") {
             new_game(INT);
             break;
         } else if (op == "3") {
