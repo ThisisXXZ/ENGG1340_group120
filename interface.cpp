@@ -343,6 +343,7 @@ void interface::save_interface(string& filename) {
         op = input_in_save(" Are you sure to exit? (Y/N): ");
         if (op == "Y") {
             end_config();
+            exit(0);
         }
     }
     if (op == "save") {
@@ -371,6 +372,7 @@ void interface::save_interface(string& filename) {
         } 
         if (op == "quit") {
             end_config();
+            exit(0);
         }
     }
 
@@ -472,6 +474,7 @@ void interface::load_interface(string& filename) {
             op = input_in_load(" Are you sure to exit? (Y/N): ");
             if (op == "Y") {
                 end_config();
+                exit(0);
             }
             return;
         }

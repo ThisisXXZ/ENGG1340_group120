@@ -46,6 +46,8 @@ class player {
     void explore_the_place(interface&, string, bool);
     bool do_part_time(interface&, bool);
     void horseracing(interface&);
+    bool search_for_rd(int);
+    void surf_the_internet(interface&, bool);
     void shopping(interface&, string, bool);
     void encounterItems(item, interface&, bool);
     string grade_converter(double);
@@ -89,7 +91,7 @@ public:
     void game_config(interface&, string&);
     void printValue(interface&);      // break the abstraction a little bit
 
-    void surf_the_internet(interface&, bool);
+    
 
     void simulate_action(interface&, bool, bool);
     void simulate_ordinary_week(interface&, int, int, bool, bool);
