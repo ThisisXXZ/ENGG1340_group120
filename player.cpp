@@ -816,7 +816,7 @@ void player::simulate_assessment_period(interface& INT) {
 
 void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainProcess, int vacation) {
     
-    simulate_assessment_period(INT);
+    if (vacation != 0) simulate_assessment_period(INT);
     INT.clearwin_in_game();
     mon += 1, ord = 1;
     if (mon == 13)  mon = 1;
