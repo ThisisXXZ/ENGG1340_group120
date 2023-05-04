@@ -1,0 +1,47 @@
+XIONG XINZHUANG
+11
+25
+12
+1
+1
+-500
+1
+0.615
+2
+3.3
+3.3
+3
+3
+1
+0
+3
+3
+0
+3
+1
+2
+3
+0
+0
+1
+1
+1
+1
+1
+1
+1
+0
+0
+0
+7
+Victoria Peak
+Lantau Island
+Hong Kong Coliseum
+Science Park
+Causeway Bay
+Wong Tai Sin
+Sha Tin Racecourse
+0
+2
+1
+4
