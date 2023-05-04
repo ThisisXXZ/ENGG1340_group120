@@ -9,7 +9,6 @@
 #include "item.h"
 
 class player {
-public:
     int ord;
     int mon;
 
@@ -48,12 +47,10 @@ public:
     bool do_part_time(interface&, bool);
     void horseracing(interface&);
     void shopping(interface&, string, bool);
-
-   
-    
     void encounterItems(item, interface&, bool);
+    string grade_converter(double);
 
-
+public:
 
     void initLandscape(interface&);
     void init(interface&);

@@ -253,7 +253,7 @@ bool Relationship::applyEvent(player& p, interface& INT) {
         if (op == 1) {
             text = "\n(Ask someone out and establish a romantic relationship requires certain amount of [courage] and [charisma / EQ]...)\n\n";
             INT.output_in_game(text, 3, true, false, false, true);
-            if (p.getCourage() >= 10 && p.getEq() >= 10) {
+            if (p.getCourage() >= 15 && p.getEq() >= 20) {
                 text = "It seems that he/she is also interested in you! You are not single anymore!\n"
                        "[EQ ++++]\n\n";
                 INT.output_in_game(text, 2);
@@ -275,7 +275,7 @@ bool Relationship::applyEvent(player& p, interface& INT) {
         }
     }
     if (getProcess() == 1) {
-        if (p.getCourage() >= 10 && p.getEq() >= 10) {
+        if (p.getCourage() >= 15 && p.getEq() >= 20) {
             string text = "Today you ask your crush out since you are attractive enough...!\n"
                           "It seems that he/she is also interested in you! You are not single anymore!\n"
                           "[EQ ++]\n"
@@ -290,8 +290,8 @@ bool Relationship::applyEvent(player& p, interface& INT) {
             return false;
         }
     }
-    if (getProcess() == 2 && p.getEq() >= 20) {
-        string text = "\n[Enormous Charisma] achieved! (EQ >= 20)\n";
+    if (getProcess() == 2 && p.getEq() >= 30) {
+        string text = "\n[Enormous Charisma] achieved! (EQ >= 30)\n";
         INT.output_in_game(text, 1, true, false, false, true);
         text = "\nAlthough it may be corny to say so, after so much time together, "
                "you are sure that your lover will be with you for the whole life...\n\n"

@@ -30,6 +30,7 @@ InternshipOrCoop m2(2, 0, 0);
 JoiningClubs m3(1, 0, 0);
 Relationship m4(2, 0, 0);
 GraduateCapstone m5(4, 0, 0);
+Minor m6(3, 0, 0);
 
 void initRandomEvents() {
     randomEvent.clear();
@@ -49,6 +50,7 @@ void initMainEvents() {
     mainEvent.push_back((Event*)&m3);
     mainEvent.push_back((Event*)&m4);
     mainEvent.push_back((Event*)&m5);
+    mainEvent.push_back((Event*)&m6);
 }
 
 void checkSave(interface& INT, player& p, int year, int sem, int week) {
@@ -92,6 +94,7 @@ void checkSave(interface& INT, player& p, int year, int sem, int week) {
         fout << mainEvent[2]->getProcess() << endl;
         fout << mainEvent[3]->getProcess() << endl;
         fout << mainEvent[4]->getProcess() << endl;
+        fout << mainEvent[5]->getProcess() << endl;
 // places
         bool vis[10];
         p.getvisited(vis);
@@ -127,8 +130,12 @@ void checkSave(interface& INT, player& p, int year, int sem, int week) {
 }
 
 void simulate(interface& INT, int year, int sem, int week, player& p) {
-    if (year == 3) { // in fact: 5
-        // ...
+    if (year == 5) { // in fact: 5
+        int mainProcess[5] = {mainEvent[0]->getProcess(), mainEvent[1]->getProcess(), 
+                              mainEvent[2]->getProcess(), mainEvent[3]->getProcess(), 
+                              mainEvent[4]->getProcess()};
+        p.simulate_semester_end(INT, randomEvent[2]->getProcess(), randomEvent[3]->getProcess(), mainProcess, 0);
+        getch();  
         return;
     }
     if (week == 1) {
@@ -169,7 +176,6 @@ void simulate(interface& INT, int year, int sem, int week, player& p) {
 
 void new_game(interface& INT) {
     INT.game_interface();
-    getch();                // 过场动画? 
     player newPlayer;
     newPlayer.init(INT);
     srand(time(0));
@@ -258,6 +264,8 @@ void load_game(interface& INT) {
         mainEvent[3]->setProcess(pro);
         fin >> pro;
         mainEvent[4]->setProcess(pro);
+        fin >> pro;
+        mainEvent[5]->setProcess(pro);
 
         bool vis[10];
         for (int i = 0; i < 10; ++i)
@@ -306,7 +314,6 @@ int main() {
             load_game(INT);
         } else if (op == "1") {
             new_game(INT);
-            break;
         } else if (op == "3") {
             INT.tutorial_interface();
         } else if (op == "q") {
