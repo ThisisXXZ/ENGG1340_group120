@@ -427,6 +427,12 @@ string act[3] = {"watched a popular TV series!\n",
 
 // SURF_THE_INTERNET_MODULE
 
+bool player::search_for_rd(int rd) {
+    for (int i = 0; i < parttimeId.size(); ++i)
+        if (parttimeId[i] == rd) { return true; }
+    return false;
+}
+
 void player::surf_the_internet(interface& INT, bool reading) {        // news module could be created
     srand(time(0));
     INT.output_in_game("You " + act[rand() % 3], 2);
@@ -442,15 +448,16 @@ void player::surf_the_internet(interface& INT, bool reading) {        // news mo
     int rd = rand() % 2, sz = unlockedLandmarks.size();
     if (rd == 1 && sz != 0) {
         rd = rand() % sz;
-        if (itemList[unlockedLandmarks[rd]].size() != 1) rd = (rd + 1) % sz;
-        if (itemList[unlockedLandmarks[rd]].size() != 1) rd = (rd + 1) % sz;
-        if (itemList[unlockedLandmarks[rd]].size() == 1) {
+        
+        if (search_for_rd(rd)) rd = (rd + 1) % sz;
+        if (search_for_rd(rd)) rd = (rd + 1) % sz;
+        if (!search_for_rd(rd)) {
             INT.output_in_game("\n\nNew email!\n", 2);
             INT.output_in_game("\nYou've received a part-time job offer from a company in " + unlockedLandmarks[rd] + " !\n", 2);
             string text = "\n(A new part-time job unlocked! " 
                           "Your ability improves the same as [visiting] the place when "
                           "[doing part-time job] there.)\n\n";
-            INT.output_in_game(text, 3, false, false, false, true);
+            INT.output_in_game(text, 3, true, false, false, true);
             parttimeId.push_back(rd);
         }
     }
@@ -726,7 +733,7 @@ void player::simulate_action(interface& INT, bool reading, bool revision) {
     } while (true);
 
     if (money < 0) {
-        text = "\nYou spend so much money that you don't have enough to live on...\n"
+        text = "\n\nYou spend so much money that you don't have enough to live on...\n"
                "(have to ask parents for assistance...)\n\n";
         INT.output_in_game(text, 4);
         text = "[Money ++++]\n";
