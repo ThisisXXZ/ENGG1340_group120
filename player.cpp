@@ -311,7 +311,6 @@ void player::init(interface& INT) {
     INT.output_in_game(text);
     text = "(Your fingers are trembling with nervousness.)\n";
     INT.output_in_game(text, 1, true, true, true, true);
-    sleep(2);
     text = "\n\n[the University of Hong Kong: Application form]\n\n";
     INT.output_in_game(text);
 
@@ -325,12 +324,11 @@ void player::init(interface& INT) {
     
     text = "Finished, finally!\n"
            "(You drop your pen, checking the application form carefully.)\n\n";
-    sleep(2);
     INT.output_in_game(text, 1, true, true, true, true);
 
     while (true) {
         printTranscript(INT);
-
+        sleep(2);
         text = "It seems perfect, except...\n\n";
         INT.output_in_game(text, 4, true, true);
         text = "1. Nuh, that's it. You are ready to submit it. \n"
@@ -344,7 +342,6 @@ void player::init(interface& INT) {
         if (op == 1) {
             text = "\n(Submitted succesfully. You let out a deep sigh and wait for the results with hope.)\n\n";
             INT.output_in_game(text, 1, true, true, true, true);
-            sleep(2);
             break;
         } else if (op == 2) {
             INT.output_in_game("\n\n");
@@ -637,7 +634,7 @@ bool player::do_part_time(interface& INT, bool reading) {
     if (sz == 0) {
         string text = "\n(You haven't received any job offer currently. Try visiting "
                       "some places or surfing the internet for some information.)\n\n";
-        INT.output_in_game(text, 3, false, false, false, true);
+        INT.output_in_game(text, 3, true, false, false, true);
         return false;
     } else {
         srand(time(0));
@@ -727,6 +724,19 @@ void player::simulate_action(interface& INT, bool reading, bool revision) {
             }   
         }
     } while (true);
+
+    if (money < 0) {
+        text = "\nYou spend so much money that you don't have enough to live on...\n"
+               "(have to ask parents for assistance...)\n\n";
+        INT.output_in_game(text, 4);
+        text = "[Money ++++]\n";
+        INT.output_in_game(text, 2);
+        text = "[Charisma / EQ --]\n\n";
+        INT.output_in_game(text, 3, true, false, false, true);
+        money += 1000;
+        eq -= 1;
+        printValue(INT);
+    }
 }
 
 /* 
@@ -745,6 +755,19 @@ Double Ninth Festival (OCT 4th)
 
 void player::simulate_semester_begin() {
     expectedGrades = 0;
+}
+
+string player::grade_converter(double x) {
+    if (x >= 4.3)      { return "A+"; }
+    else if (x >= 4)   { return "A"; }
+    else if (x >= 3.6) { return "A-"; }
+    else if (x >= 3.3) { return "B+"; }
+    else if (x >= 3)   { return "B"; }
+    else if (x >= 2.6) { return "B-"; }
+    else if (x >= 2.3) { return "C+"; }
+    else if (x >= 2.0) { return "C"; }
+    else if (x >= 1.6) { return "C-"; }
+    else { return "D"; }
 }
 
 void player::simulate_assessment_period(interface& INT) {
@@ -786,7 +809,7 @@ void player::simulate_assessment_period(interface& INT) {
 
 void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainProcess, int vacation) {
     
-    if (vacation != 0)  simulate_assessment_period(INT);
+    simulate_assessment_period(INT);
     INT.clearwin_in_game();
     mon += 1, ord = 1;
     if (mon == 13)  mon = 1;
@@ -888,7 +911,7 @@ void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainPr
                     courage += 4, eq += 4;
                     money += 6000;
                     printValue(INT);
-                    mainProcess[0] = 3;
+                    mainProcess[1] = 3;
                     return;
                 } 
             } else {
@@ -896,7 +919,7 @@ void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainPr
                 INT.output_in_game(text, 2);
                 text = "(Improve your grades or participate in more activities, then try to apply next time!)\n\n";
                 INT.output_in_game(text, 3, true, false, false, true);
-                mainProcess[0] = 0;
+                mainProcess[1] = 0;
             }
         }
 
@@ -976,8 +999,105 @@ void player::simulate_semester_end(interface& INT, int sch, int dep, int* mainPr
         if (mainProcess[1] == 4)
             mainProcess[1] = 0;
     } else {
+        string text = "At the end of four years, you have your graduation ceremony.\n"
+                      "You are going to leave this picturesque campus and you miss it very much.\n"
+                      "You begin to reflect on these four years of growth ------\n\n";
+        INT.output_in_game(text, 3);
+
+        text = "Intelligence: " + to_string(iq) + "\n"
+               "Charisma: " + to_string(eq) + "\n"
+               "Courage: " + to_string(courage) + "\n"
+               "Luck: " + to_string(luck) + "\n\n"
+               "University life not only increases your knowledge, "
+               "but also makes you more courageous and better at getting along with people.\n\n";
+        INT.output_in_game(text, 1, true, false, false, true);
+
+        text = "You've explored the Hong Kong city, and these places leave a lasting impression on you...\n\n";
+        INT.output_in_game(text, 3, true, false, false, true);
+        for (int i = 0; i < unlockedLandmarks.size(); ++i)
+            INT.output_in_game(unlockedLandmarks[i] + "\n", 3, true, false, false, true);
         
-        
+        text = "\nYou continue to make progress in the face of academic challenges...\n"
+               "Here's your academic transcript for four years ---\n\n";
+        INT.output_in_game(text, 6, true, false, false, true);
+        double tot = 0;
+        for (int i = 0; i < viewYourGrades.size(); ++i) {
+            INT.output_in_game("The " + to_string(i + 1) + "-th semester: " + grade_converter(viewYourGrades[i]) + "\n", 6, true, false, false, true);
+            tot += viewYourGrades[i];
+        }
+        tot /= 8;
+        INT.output_in_game("The final letter grade of yours is: " + grade_converter(tot) + " !\n", 6, true, false, false, true);
+        if (tot >= 3.6) {
+            INT.output_in_game("You've got the [HKU first honor] !\n\n", 6, true, false, false, true);
+        }
+
+        text = "In these four years, you have achieved many things, and they"
+               "have shaped your future...\n\n";
+        INT.output_in_game(text, 4);
+        sleep(1);
+        if (mainProcess[0] == 3) {
+            text = "You have studied abroad on exchange and learned about a different culture.\n\n"
+                   "(This experience enables you to further studying for a PhD abroad)\n\n";
+        } else {
+            text = "(failed to complete the challenge: study abroad)\n\n"
+                   "Having the experience of an exchange abroad proved to be very helpful later on. "
+                   "However, life is not all smooth sailing. \n\n";
+        }
+        INT.output_in_game(text, 5, true, false, false, true);
+        sleep(2);
+        if (mainProcess[1] == 3) {
+            text = "You have participated in many interships and have gained considerable work experience.\n\n"
+                   "(During the subsequent job search, your fantastic CV impressed many companies.)\n\n";
+        } else {
+            text = "(failed to complete the challenge: internship)\n\n"
+                   "You didn't have an internship during your time at university, which made you "
+                   "quite uncomfortable when you first started working. However, you soon learn how to balance work and life. \n\n";
+        }
+        INT.output_in_game(text, 1, true, false, false, true);
+        sleep(2);
+        if (mainProcess[2] == 3) {
+            text = "You were the leader of a club at university and this has developed your strong leadership skills.\n\n"
+                   "(In later years, you have the opportunity to join the political arena and dedicate yourself to the betterment of society)\n\n";
+        } else if (mainProcess[2] == 2) {
+            text = "(failed to complete the challenge: leader of the club)\n\n"
+                   "You have learned to work together by joining clubs and participating in interesting activities during your time at university. \n\n";
+        } else {
+            text = "(failed to complete the challenge: joining a club)\n\n"
+                   "The disadvantages of university societies are obvious: the social purpose far outweighs the interest purpose."
+                   "Therefore, you've never taken an interest in them.\n\n";
+        }
+        INT.output_in_game(text, 2);
+        sleep(2);
+        if (mainProcess[3] == 3) {
+            text = "You managed to find someone to love at university and stay with him/her for the rest of your life.\n\n";
+        } else if (mainProcess[2] == 2) {
+            text = "(failed to complete the challenge: maintaining relationship)\n\n"
+                   "Your relationship at university ended in a break-up. This makes you depressed for a long time, but in the end you realise that it was also a precious memory.\n\n";
+        } else {
+            text = "(failed to complete the challenge: Dating someone)\n\n"
+                   "You have remained single throughout your university career. This is a very great achievement!\n\n";
+        }
+        INT.output_in_game(text, 3, true, false, false, true);
+        sleep(2);
+        if (mainProcess[4] == 3) {
+            text = "Your capstone project has impressed a business man deeply and several years later you become the chief designer in his company.\n\n";
+        } else {
+            text = "(failed to complete the challenge: completing capstone)\n\n"
+                   "Your capstone project was completed very haphazardly. This at one point made you feel very regretful and missed the opportunity to be known.\n\n";
+        }
+        if (mainProcess[5] == 3) {
+            text = "You have chosen a minor. On your capstone project show, your integrated skills "
+                   "surprised a lot of visitors, and therefore you receive many offers from famous companies.\n\n";
+        } else {
+            text = "(failed to complete the challenge: choosing minor)\n\n"
+                   "You are very specialised in your field. Sometimes, however, you may find that knowledge in other areas is also quite useful.\n\n";
+        }
+        INT.output_in_game(text, 6, true, false, false, true);
+        sleep(2);
+
+        text = "Congratulations on getting through the game! Due to time constraints, many of the features that were intended to be implemented had to be discarded...\n"
+               "However the process of making this game has taught us a lot. That's the best part of this task.\n\n";
+        INT.output_in_game(text);
     }    
 }
 
