@@ -135,7 +135,7 @@ void interface::tut_print(WINDOW* w, string s) {
     wprintw(w, "%s", s.c_str());
     touchwin(tutscr);
     wrefresh(tutscr);
-    usleep(10000);
+    usleep(50000);
 }
 
 void interface::tutorial_interface() {
@@ -166,6 +166,8 @@ achieve success while maintaining a balance between your academic and personal p
 
     tut_print(tut_upwin, "\nAre you ready to embark on this exciting and unpredictable journey as a freshman \
 at HKU? Let's begin and see where life takes you on campus!\n");
+
+    tut_print(tut_upwin, "\n(For more information and instructions, please refer to README.md)\n");
 
     wmove(tut_downwin, 2, 2);
     wattron(tut_downwin, A_BLINK);

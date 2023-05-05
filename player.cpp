@@ -204,7 +204,6 @@ void player::initSkill(interface& INT) {
     INT.output_in_game(text, 1, true, true, true, true);
     sleep(2);
 
-    // This part should be randomized and objectivize
     text = "1. You come from a very rich family.\n   "
            "(Skill [Money talks]: Don't worry, you got money. A lot!)\n"
            "2. You are born with good luck.\n   "

@@ -32,7 +32,7 @@ Relationship m4(2, 0, 0);
 GraduateCapstone m5(4, 0, 0);
 Minor m6(3, 0, 0);
 
-void initRandomEvents() {
+void initRandomEvents() {       // initialize the random events
     randomEvent.clear();
     randomEvent.push_back((Event*)&d1);
     randomEvent.push_back((Event*)&d2);
@@ -43,7 +43,7 @@ void initRandomEvents() {
     randomEvent.push_back((Event*)&d7);
 }
 
-void initMainEvents() {
+void initMainEvents() {         // initialize the main events (challenges)
     mainEvent.clear();
     mainEvent.push_back((Event*)&m1);
     mainEvent.push_back((Event*)&m2);
@@ -53,6 +53,10 @@ void initMainEvents() {
     mainEvent.push_back((Event*)&m6);
 }
 
+// the saving process: the status of the current game could be divided in 3 catagories:
+// 1: player's information (parameter player& p)
+// 2: current time: (parameter year, sem and week)
+// 3. current event process: the global vectors randomEvent & mainEvent
 void checkSave(interface& INT, player& p, int year, int sem, int week) {
     string fileName = "NULL";
     p.game_config(INT, fileName);
@@ -129,6 +133,8 @@ void checkSave(interface& INT, player& p, int year, int sem, int week) {
     }
 }
 
+// the whole simulation process
+// it takes time and player as input, and continue to simulate at that time
 void simulate(interface& INT, int year, int sem, int week, player& p) {
     if (year == 5) { // in fact: 5
         int mainProcess[5] = {mainEvent[0]->getProcess(), mainEvent[1]->getProcess(), 
@@ -174,6 +180,7 @@ void simulate(interface& INT, int year, int sem, int week, player& p) {
     simulate(INT, year, sem, week + 1, p);
 }
 
+// create and initialize a new game
 void new_game(interface& INT) {
     INT.game_interface();
     player newPlayer;
@@ -182,6 +189,7 @@ void new_game(interface& INT) {
     simulate(INT, 1, 1, 1, newPlayer);
 }
 
+// load a game
 void load_game(interface& INT) {
     srand(time(0));
     string fileName = "NULL";
@@ -306,11 +314,12 @@ int main() {
     
     INT.main_interface();
     while (true) {
-        INT.output_in_main(" Your prompt here: ");
+        INT.output_in_main(" Your command here: ");
         string op = INT.input_in_main();
-        if (op == "4")
-                break;
-        else if (op == "2") {
+        if (op == "4") {
+            INT.output_in_main(" Sorry! Config module is still in development... (Press any key to proceed...)");
+            getch();
+        } else if (op == "2") {
             load_game(INT);
         } else if (op == "1") {
             new_game(INT);
@@ -322,14 +331,12 @@ int main() {
             if (op == "Y") 
                 break;
         } else {
-            INT.output_in_main(" Invalid prompt! (Press any key to proceed...)");
+            INT.output_in_main(" Invalid input! (Press any key to proceed...)");
             getch();
         }
     }
     
     INT.end_config();
-
-    cout << "\n\nThis part needs further developing...\n";
 
     return 0;
 }
