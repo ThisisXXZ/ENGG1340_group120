@@ -97,4 +97,6 @@ The interface module (including ``interface.h`` and ``interface.cpp``) is mostly
 
 The in-game texts appears in **typewriter style**: every character will appear in the screen with tiny-time pause. The ``sleep()`` function in the library ``unistd.h`` help create the time pause.
 
-Readme Editors: Xiong Xinzhuang, Xu Haoyi, Wang Yao 
+<br />
+
+ReadMe Editors: Xiong Xinzhuang, Xu Haoyi, Wang Yao 
