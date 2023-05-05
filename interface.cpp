@@ -263,7 +263,7 @@ string interface::input_in_save(string prom) {
     return string(s);
 }
 
-void interface::save_interface(string& filename) {                       
+void interface::save_interface(string& filename, bool& quit) {                       
 
     savescr = newwin(ConRow, ConCol, 0, 0);
     box(savescr, '+', '.');
@@ -334,47 +334,52 @@ void interface::save_interface(string& filename) {
 
     touchwin(savescr);
 
-    string op = input_in_save("Enter your command: (above is the command list): ");
-    while (op != "return" && op != "quit" && op != "save") {
-        op = input_in_save("Invalid input. Do you want to [return], [quit] or [save]? ");
-    }   
-    if (op == "return") {
-        return;
-    } 
-    if (op == "quit") {
-        op = input_in_save(" Are you sure to exit? (Y/N): ");
-        if (op == "Y") {
-            end_config();
-            exit(0);
-        }
-    }
-    if (op == "save") {
-        while (true) {
-            op = input_in_save("Please select a saving unit (1-4): ");
-            while (op != "1" && op != "2" && op != "3" && op != "4")
-                op = input_in_save("Invalid input. Please enter a number in [1, 4]: ");
-            string fileName = "Save#" + op + ".txt";
-            FILE* fp = fopen(fileName.c_str(), "r");
-            if (fp == NULL) {
-                filename = fileName;
-                break;
-            } else {
-                op = input_in_save("This unit is already occupied. Do you want to overwrite it? (Y/N): ");
-                if (op == "Y") {
-                    filename = fileName;
-                    break;
-                }
-            }
-        }
-        op = input_in_save("Do you want to return to game [return], or end the game [quit]? ");
-        while (op != "return" && op != "quit")
-            op = input_in_save("Invalid input. Please enter [return] or [quit]\n");
+    while (true) {
+        string op = input_in_save("Enter your command: (above is the command list): ");
+        while (op != "return" && op != "quit" && op != "save") {
+            op = input_in_save("Invalid input. Do you want to [return], [quit] or [save]? ");
+        }   
         if (op == "return") {
             return;
         } 
         if (op == "quit") {
-            end_config();
-            exit(0);
+            op = input_in_save(" Are you sure to exit? (Y/N): ");
+            if (op == "Y") {
+                end_config();
+                quit = true;
+                return;
+            }
+            continue;
+        }
+        if (op == "save") {
+            while (true) {
+                op = input_in_save("Please select a saving unit (1-4): ");
+                while (op != "1" && op != "2" && op != "3" && op != "4")
+                    op = input_in_save("Invalid input. Please enter a number in [1, 4]: ");
+                string fileName = "Save#" + op + ".txt";
+                FILE* fp = fopen(fileName.c_str(), "r");
+                if (fp == NULL) {
+                    filename = fileName;
+                    break;
+                } else {
+                    op = input_in_save("This unit is already occupied. Do you want to overwrite it? (Y/N): ");
+                    if (op == "Y") {
+                        filename = fileName;
+                        break;
+                    }
+                }
+            }
+            op = input_in_save("Do you want to return to game [return], or end the game [quit]? ");
+            while (op != "return" && op != "quit")
+                op = input_in_save("Invalid input. Please enter [return] or [quit]\n");
+            if (op == "return") {
+                return;
+            } 
+            if (op == "quit") {
+                end_config();
+                quit = true;
+                return;
+            }
         }
     }
 
@@ -478,12 +483,37 @@ void interface::load_interface(string& filename) {
                 end_config();
                 exit(0);
             }
-            return;
+            continue;
         }
         if (op == "load") {
+            bool flag = 0;
+            FILE* fp = fopen("Save#1.txt", "r");
+            if (fp != NULL) flag |= 1;
+            fp = fopen("Save#2.txt", "r");
+            if (fp != NULL) flag |= 1;
+            fp = fopen("Save#3.txt", "r");
+            if (fp != NULL) flag |= 1;
+            fp = fopen("Save#4.txt", "r");
+            if (fp != NULL) flag |= 1;
+            if (!flag) {
+                op = input_in_load("No available data to load. Please [return] or [quit]: ");
+                while (op != "return" && op != "quit") 
+                    op = input_in_load("Invalid input. Please [return] or [quit]: "); 
+                if (op == "return") {
+                    return;
+                } 
+                if (op == "quit") {
+                    op = input_in_load(" Are you sure to exit? (Y/N): ");
+                    if (op == "Y") {
+                        end_config();
+                        exit(0);
+                    }
+                    continue;
+                }
+            }   
             op = input_in_load("Please select a loading unit (1-4): ");
             string fileName = "Save#" + op + ".txt";
-            FILE* fp = fopen(fileName.c_str(), "r");
+            fp = fopen(fileName.c_str(), "r");
             while ((op != "1" && op != "2" && op != "3" && op != "4") || fp == NULL) {
                 op = input_in_load("Invalid input. Please select an [occupied] unit: ");
                 fileName = "Save#" + op + ".txt";

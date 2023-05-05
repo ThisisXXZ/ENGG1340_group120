@@ -50,7 +50,7 @@ public:
                         bool udl = false, bool blk = false, 
                         bool bld = false, string des = "%s");
     string input_in_save(string prom = "Your command here: ");    // prompt player for command in save interface
-    void save_interface(string&);                                 // create and initialize the save interface
+    void save_interface(string&, bool&);                                 // create and initialize the save interface
     string input_in_load(string prom = "Your command here: ");    // prompt player for command in load interface
     void load_interface(string&);                                 // create and initialize the load interface
 };
