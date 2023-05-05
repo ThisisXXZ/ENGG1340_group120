@@ -3,7 +3,7 @@
 
 #include <string>
 
-
+// item is a object that could interact with players, and could influence player's attributes
 class item {
     int cost;
     int diq;
@@ -16,7 +16,8 @@ class item {
     std::string des;  // description
 public:
     item(int, int, int, int, int, int, std::string, std::string);
-    int getCost();
+// getters for items
+    int getCost();      
     int addiq();
     int addeq();
     int addcourage();
@@ -24,6 +25,7 @@ public:
     int addskill();
     std::string getName();
     std::string description();
+// return string describing this item(event)'s positive/negative effects
     std::string positiveEffect();
     std::string negativeEffect();
 };

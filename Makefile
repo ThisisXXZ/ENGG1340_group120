@@ -19,5 +19,8 @@ main: main.o event.o item.o player.o interface.o
 clean:
 	rm -f interface.o item.o player.o main.o event.o main
 
-.PHONY: clean
+cleanSave:
+	rm -f Save#*.txt
+
+.PHONY: clean cleanSave
 

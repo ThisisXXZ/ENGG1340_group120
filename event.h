@@ -7,16 +7,18 @@
 #include <string>
 #include <vector>
 
+// Event class is a base class for various derived events
 class Event {
 public:
 
+// getters for time
     int getYear();
     int getSem();
     int getWeek();
     
 
     Event(int year, int sem, int week) : year(year), sem(sem), week(week), process(0) {}
-    virtual bool applyEvent(player& p, interface& INT);
+    virtual bool applyEvent(player& p, interface& INT); // the player will interact with events in this function
 
     bool checktime(int, int, int);
     int getProcess();
@@ -25,9 +27,10 @@ public:
 private:
     int year, sem;       // Date: year / sem
     int week;            // Time: 0-11
-    int process;   // Place
+    int process;         // process indicates the event's status (unfinished/in progress/finished/refused...)
 };
 
+// The derived events
 class StrugglingInClass : public Event {
 public: 
     StrugglingInClass(int year, int sem, int week) : Event(year, sem, week) {}
