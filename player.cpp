@@ -219,7 +219,7 @@ void player::game_config(interface& INT, string& filename) {
     noecho();
     char c = wgetch(INT.get_gamewin());
     echo();
-    if (c == 'c') {
+    if (c == 's') {
         INT.save_interface(filename);
     }   
 }
