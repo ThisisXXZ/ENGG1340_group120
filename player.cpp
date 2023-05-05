@@ -215,12 +215,12 @@ void player::initSkill(interface& INT) {
     INT.output_in_game("!!!(This part needs further developing: Skills & Shortcomings needed!!!)\n\n");
 }
 
-void player::game_config(interface& INT, string& filename) {
+void player::game_config(interface& INT, string& filename, bool& quit) {
     noecho();
     char c = wgetch(INT.get_gamewin());
     echo();
     if (c == 's') {
-        INT.save_interface(filename);
+        INT.save_interface(filename, quit);
     }   
 }
 
@@ -498,7 +498,7 @@ void player::initLandscape(interface& INT) {  // cost, iq, eq, courage, luck, sk
     des = "\n   (Mystic Stone Store? Looks pretty suspicious, should we try it?)\n";
     itemList["Causeway Bay"].push_back(item(3000, 0, 0, 0, 5, 0, "[Buying a mystic stone]", des));
 
-    for (int rd = 0; rd < 8; ++rd) {
+    for (int rd = 0; rd < 7; ++rd) {
         if (itemList[landmark[rd]].size() == 1) {
             item visit = itemList[landmark[rd]][0];
             item part_time(-1000, visit.addiq(), visit.addeq(), visit.addcourage(), 
@@ -648,7 +648,6 @@ bool player::do_part_time(interface& INT, bool reading) {
         string text = "\nYou check the calender, and find that today you could do part-time job in " + unlockedLandmarks[parttimeId[rd]] + ".\n\n";
         INT.output_in_game(text, 1);
         encounterItems(itemList[unlockedLandmarks[parttimeId[rd]]][1], INT, reading);
-        // money system
     }
     return true;
 }
