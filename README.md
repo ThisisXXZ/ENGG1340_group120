@@ -1,13 +1,13 @@
 # ENGG1340/COMP2113 group120: HKU Student Simulator
 
 ## Team Members
-(Listed in alphabetical order)
+Listed in alphabetical order, in the format of *real name (Github ID)*
 
-1. Chen Yanning
-2. Lu Jiayang
-3. Xiong Xinzhuang
-4. Xu Haoyi
-5. Wang Yao
+1. Chen Yanning (**chenyanning** illufluo)
+2. Lu Jiayang (**Linus** Linus-Lu)
+3. Xiong Xinzhuang (**XXZ** ThisisXXZ)
+4. Xu Haoyi (**xuZinogre**)
+5. Wang Yao (**DorisssW**)
 
 ## Game Description
 
