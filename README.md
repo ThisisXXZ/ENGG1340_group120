@@ -3,9 +3,9 @@
 ## Team Members
 Listed in alphabetical order, in the format of *real name (Github ID)*
 
-1. Chen Yanning (**chenyanning** illufluo)
-2. Lu Jiayang (**Linus** Linus-Lu)
-3. Xiong Xinzhuang (**XXZ** ThisisXXZ)
+1. Chen Yanning (**illufluo** chenyanning)
+2. Lu Jiayang (**Linus-Lu** Linus)
+3. Xiong Xinzhuang (**ThisisXXZ** XXZ)
 4. Xu Haoyi (**xuZinogre**)
 5. Wang Yao (**DorisssW**)
 
