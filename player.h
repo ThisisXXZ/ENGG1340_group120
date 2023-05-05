@@ -92,8 +92,8 @@ public:
     void setUnlocked(string*, int);
     
 
-    void game_config(interface&, string&);  // called when a week is completed, connect to the save&load module
-    void printValue(interface&);            // handle the attribute shown in the right column
+    void game_config(interface&, string&, bool&);  // called when a week is completed, connect to the save&load module
+    void printValue(interface&);                   // handle the attribute shown in the right column
 
     void simulate_action(interface&, bool, bool);       // simulate when player make a choice in a normal week
     void simulate_ordinary_week(interface&, int, int, bool, bool);  // simulate player's action in a normal week
