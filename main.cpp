@@ -59,7 +59,8 @@ void initMainEvents() {         // initialize the main events (challenges)
 // 3. current event process: the global vectors randomEvent & mainEvent
 void checkSave(interface& INT, player& p, int year, int sem, int week) {
     string fileName = "NULL";
-    p.game_config(INT, fileName);
+    bool quit = false;
+    p.game_config(INT, fileName, quit);
     if (fileName != "NULL") {
         ofstream fout;
         fout.open(fileName.c_str());
@@ -130,6 +131,9 @@ void checkSave(interface& INT, player& p, int year, int sem, int week) {
         fout << sem << endl;
         fout << week << endl;
         fout.close();
+    }
+    if (quit) {
+        exit(0);
     }
 }
 
